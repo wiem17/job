@@ -1,0 +1,15 @@
+.poste-image {
+    width: 50px; /* Définissez la largeur souhaitée */
+    height: auto; /* Conservez le ratio hauteur/largeur */
+  }
+  
+  .categorytile {
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 300px; /* Ajustez la hauteur selon vos préférences */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
