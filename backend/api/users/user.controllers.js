@@ -36,8 +36,7 @@ exports.getUserCondidats = async (req, res, next) => {
     console.error("Error fetching condidats by user ID:", error);
     res.status(500).json({
       success: false,
-      message:
-        "Une erreur s'est produite lors de la récupération des condidats",
+      message: "Une erreur s'est produite lors de la récupération des condidats",
     });
   }
 };
@@ -79,8 +78,6 @@ exports.updateUserById = async (req, res) => {
   }
 };
 
-
-
 exports.deleteUserById = (req, res) => {
   id = req.params.id;
   UserSchema.findOneAndDelete({ _id: id })
@@ -99,25 +96,26 @@ exports.getAdminUsers = async (req, res) => {
     res.status(500).send(err);
   }
 };
-exports.uploadImage = (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "Aucun fichier téléchargé" });
+
+exports.updateUserImageById = async (req, res) => {
+  const id = req.user._id;
+  const file = req.file; // This will contain the image file saved by multer
+
+  if (!file) {
+    return res.status(400).json({ error: "No image provided." });
   }
 
-  // Utilisez req.file pour accéder à l'image téléchargée
-  let imageUrl = req.file.path;
+  try {
+    // Update user image path in the database
+    const updatedUser = await UserSchema.findByIdAndUpdate(id, { image: file.path }, { new: true });
 
-  // Remplacer les caractères spéciaux dans l'URL de l'image
-  imageUrl = imageUrl.replace(/\\/g, "/");
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found." });
+    }
 
-  // Faites ce que vous voulez avec l'image, par exemple, enregistrez l'URL dans la base de données
-  // Ici, nous renvoyons simplement l'URL de l'image en tant que réponse
-  res.status(200).json({ imageUrl });
+    res.send(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error updating user image." });
+  }
 };
-
-
-
-
-
-
-

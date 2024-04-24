@@ -41,29 +41,3 @@ export async function register(objRegister) {
     console.log(error);
   }
 }
-export const getUserById = async (userId) => {
-  try {
-    const response = await axios.get(`${baseUrl}api/users/${userId}`); 
-    return response.data;
-  } catch (error) {
-    console.error('Error while fetching user by ID:', error);
-    throw error;
-  }
-};
-export async function fetchCondidatsByUserId(userId) {
-  try {
-    const response = await axios.get(`${baseUrl}api/users/my-condidats/${userId}`);
-    return response.data.condidats;
-  } catch (error) {
-    console.error("Error fetching condidats:", error);
-    throw error; 
-  }
-}
-export const updateUserById = async (userId, newData) => {
-  try {
-    const response = await axios.put(`${baseUrl}api/users/${userId}`, newData);
-    return response.data;
-  } catch (error) {
-    throw error; 
-  }
-};
