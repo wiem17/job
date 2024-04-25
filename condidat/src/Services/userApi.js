@@ -17,10 +17,10 @@ export const getUserById = async (userId) => {
     throw error;
   }
 };
-export async function fetchCondidatsByUserId(userId) {
+export async function fetchCondidatsByUserId(id) {
   try {
-    const response = await axios.get(`${baseUrl}api/users/my-condidats/${userId}`, config);
-    return response.data.condidats;
+    const response = await axios.get(`${baseUrl}api/users/my-condidats/${id}`, config);
+    return response.data;
   } catch (error) {
     console.error("Error fetching condidats:", error);
     throw error;
@@ -34,7 +34,6 @@ export const updateUserById = async (userId, newData) => {
     throw error;
   }
 };
-
 export async function updateUserImage(file) {
   const formData = new FormData();
   formData.append("file", file);

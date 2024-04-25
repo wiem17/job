@@ -44,12 +44,23 @@ function Login() {
                 <div className="text-center">
                   <p className="font-sm text-brand-2">Welcome back! </p>
                   <h2 className="mt-10 mb-5 text-brand-1">Member Login</h2>
-                  <p className="font-sm text-muted mb-30">Access to all features. No credit card required.</p>
+                  <p className="font-sm text-muted mb-30">
+                    Access to all features. No credit card required.
+                  </p>
                 </div>
-                <form className="login-register text-start mt-20" onSubmit={handleLogin}>
+                <form
+                  className="login-register text-start mt-20"
+                  onSubmit={handleLogin}
+                >
                   <Form.Group>
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" value={email} required onChange={(e) => setEmail(e.target.value)} />
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      value={email}
+                      required
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </Form.Group>
                   <Form.Group>
                     <Form.Label>Password</Form.Label>
@@ -68,7 +79,10 @@ function Login() {
                     </a>
                   </div>
                   <div className="form-group">
-                    <Button className="btn btn-brand-1 hover-up w-100" type="submit">
+                    <Button
+                      className="btn btn-brand-1 hover-up w-100"
+                      type="submit"
+                    >
                       Login
                     </Button>
                   </div>
@@ -78,10 +92,17 @@ function Login() {
                 </form>
               </div>
               <div className="img-1 d-none d-lg-block">
-                <img className="shape-1" src="assets/imgs/page/login-register/img-4.svg" alt="JobBox" />
+                <img
+                  className="shape-1"
+                  src="assets/imgs/page/login-register/img-4.svg"
+                  alt="JobBox"
+                />
               </div>
               <div className="img-2">
-                <img src="assets/imgs/page/login-register/img-3.svg" alt="JobBox" />
+                <img
+                  src="assets/imgs/page/login-register/img-3.svg"
+                  alt="JobBox"
+                />
               </div>
             </div>
           </div>

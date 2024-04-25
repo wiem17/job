@@ -1,6 +1,5 @@
 import axios from "axios";
 const baseUrl = process.env.REACT_APP_API;
-
 /**
  * The above function is an asynchronous function that takes an email and password as parameters, sends
  * a POST request to the specified API endpoint for user login, and returns the response.
