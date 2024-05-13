@@ -11,6 +11,8 @@ module.exports = (app) => {
   router.post("/register", upload, userController.register);
 
   router.post("/login", userController.login);
-
+  router.post('/forgot-password', userController.forgotPassword);
+  router.get('/reset-password/:token', userController.resetPassword);
+  router.post('/reset-password/:token', userController.resetPassword);
   app.use("/", router);
 };

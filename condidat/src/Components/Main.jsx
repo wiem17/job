@@ -25,6 +25,7 @@ function Main() {
   const [image, setImage] = useState("");
   const [newImage, setNewImage] = useState(null);
   const fileInputRef = useRef(null);
+   const [loading, setLoading] = useState(true);
   console.log(user._id);
   useEffect(() => {
     try {
@@ -38,22 +39,25 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    try {
-      fetchCondidatsByUserId(user._id).then((res) => {
-        // Vérifiez si res est défini et non vide avant de mettre à jour l'état
-        console.log(res);
-        if (res && res.length > 0) {
-          setCondidats(res);
+    fetchCondidatsByUserId(user._id)
+      .then((res) => {
+        if (res && res.condidats.length > 0) {
+          setCondidats(res.condidats);
         } else {
-          setCondidats([]); // Définissez condidats comme un tableau vide si res est vide
+          setCondidats([]);
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching condidats:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Marquer le chargement comme terminé, que la requête ait réussi ou non
       });
-    } catch (error) {
-      console.error("Error fetching condidats:", error);
-      // Gérer les erreurs de récupération des données
-    }
   }, []);
 
+  useEffect(() => {
+    console.log(condidats);
+  }, [condidats]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     const keys = name.split(".");
@@ -75,7 +79,8 @@ function Main() {
 
   const handleSaveChanges = async (e) => {
     e.preventDefault();
-    console.log(userData);
+    console.log("----",userData);
+    
     try {
       // Envoyez les données de l'utilisateur mises à jour à votre backend
       const updatedUser = await updateUserById(user._id, userData);
@@ -396,69 +401,53 @@ function Main() {
                         <h3 className="mt-0 color-brand-1 mb-50">My Jobs</h3>
                         <div className="row display-list">
                           <div className="col-xl-12 col-12">
-                            {condidats.map((condidat) => (
-                              <div
-                                className="card-grid-2 hover-up"
-                                key={condidat._id} // Utilisez _id de chaque condidat comme clé unique
-                              >
-                                <span className="flash" />
-                                <div className="row">
-                                  <div className="col-lg-6 col-md-6 col-sm-12">
-                                    <div className="card-grid-2-image-left">
-                                      <div className="image-box">
-                                        <a href={`${baseUrl}${condidat.file}`}>
-                                          <img
-                                            src="assets/imgs/brands/brand-6.png"
-                                            alt="jobBox"
-                                          />
-                                        </a>
-                                      </div>
-                                      <div className="right-info">
-                                        <a className="name-job" href="">
-                                          {condidat.email}
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="card-block-info">
-                                  <h4>{condidat.titrePoste}</h4>
-                                  <span
-                                    style={{
-                                      color: "purple",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    Lettre de motivation:{" "}
-                                  </span>
-                                  <span
-                                    style={{
-                                      color: "purple",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    {condidat.lettre_de_motivation}
-                                  </span>
-                                  <div className="card-2-bottom mt-20">
-                                    <div className="row">
-                                      <div className="col-lg-5 col-5 text-end">
-                                        {condidat.accepted ? (
-                                          <p style={{ color: "green" }}>
-                                            Accepté
-                                          </p>
-                                        ) : condidat.accepted === false ? (
-                                          <p style={{ color: "red" }}>Refusé</p>
-                                        ) : (
-                                          <p style={{ color: "gray" }}>
-                                            En attente
-                                          </p>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
+                            {loading ? (
+        <p>Chargement en cours...</p> // Afficher un message de chargement pendant que les données sont récupérées
+      ) :
+                            condidats.length > 0 ? (
+        condidats.map((condidat) => (
+          <div className="card-grid-2 hover-up" key={condidat._id}>
+            <div className="row">
+              <div className="col-lg-6 col-md-6 col-sm-12">
+                <div className="card-grid-2-image-left">
+                  <div className="image-box">
+                    <a href={`${baseUrl}${condidat.file}`}>
+                      <img src="assets/imgs/brands/brand-6.png" alt="jobBox" />
+                    </a>
+                  </div>
+                  <div className="right-info">
+                    <a className="name-job" href="">{condidat.email}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="card-block-info">
+              <h4>{condidat.titrePoste}</h4>
+              <span style={{ color: "purple", fontWeight: "bold" }}>Lettre de motivation: </span>
+              <span style={{ color: "purple", fontWeight: "bold" }}>{condidat.lettre_de_motivation}</span>
+              <div className="card-2-bottom mt-20">
+                <div className="row">
+                  <div className="col-lg-5 col-5 text-end">
+                  {condidat.accepted === "true" ? (
+  <p style={{ color: "green" }}>Accepté nous vous enverrons un mail</p>
+) : condidat.accepted === "en attente" ? (
+  <p style={{ color: "gray" }}>En attente</p>
+) : condidat.accepted === "false" ? (
+  <p style={{ color: "red" }}>Refusé</p>
+) : (
+  <p style={{ color: "red" }}>Erreur: État inconnu</p>
+)}
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>Aucun poste trouvé</p>
+      )}
                           </div>
                         </div>
                       </div>

@@ -11,9 +11,7 @@ const condidatSchema = Schema({
 
         email:{
             type:String,
-            required:[true, 'is required'],
-            unique:true,
-            index:true,
+           
             
         },
  

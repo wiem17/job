@@ -12,6 +12,7 @@ import SendEmail from "./Pages/SendEmail";
 import Postcondidat from "./Pages/Postcondidat";
 import Login from "./Pages/Login";
 import Profile from "./Pages/Profile";
+import Forgetpassword from "./Pages/Forgetpassword";
 const router = createBrowserRouter([
   {
     path: "/admin-dashboard",
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
   { path: "/condidataccepted", element: <CondidatAccepted /> },
   { path: "/", element: <Login /> },
   { path: "/profile", element: <Profile /> },
+  { path: "/forget", element: <Forgetpassword /> },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

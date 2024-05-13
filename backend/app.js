@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+   origin : ['http://localhost:3000', 'http://localhost:3001','http://localhost:3002','http://localhost:3003'] ,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
@@ -23,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("uploads"));
 app.use("/uploads", express.static(__dirname + "/uploads/"));
+app.set("view engine", "ejs");
 
 //app.use("/user", userRoute);
 // app.use("/poste", posteRoute);

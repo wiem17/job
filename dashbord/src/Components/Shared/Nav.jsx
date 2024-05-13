@@ -19,103 +19,103 @@ import { useNavigate } from "react-router-dom";
   }, []);
   return (
     <div className="nav">
-      <a className="btn btn-expanded" />
-      <nav className="nav-main-menu">
-        <ul className="main-menu">
-          <li>
-            {" "}
-            <a className="dashboard2 active" >
-              <img
-                src="assets/imgs/page/dashboard/dashboard.svg"
-                alt="jobBox"
-              />
-              <span className="name"><Link to="/admin-dashboard">Dashboard</Link> </span>
-            </a>
-          </li>
-          <li>
-            {" "}
-            <a className="dashboard2" >
-              <img src="assets/imgs/page/dashboard/jobs.svg" alt="jobBox" />
-              <span className="name"><Link to="/postlist">My Jobs</Link> </span>
-            </a>
-          </li>
-          <li>
-            {" "}
-            <a className="dashboard2" >
-              <img
-                src="assets/imgs/page/dashboard/candidates.svg"
-                alt="jobBox"
-              />
-              <span className="name"><Link to="/postcondidat">Condidates</Link></span>
-            </a>
-          </li>
-          <li>
-            {" "}
-            <a className="dashboard2" >
-            <img src="assets/imgs/page/dashboard/tasks.svg" alt="jobBox" />
-               <span className="name"><Link to="/condidataccepted"> Accepted</Link></span>
-            </a>
-          </li>
-         
-          
-          
-          <li>
-                  {" "}
-                  <a className="dashboard2" href="profile.html">
-                    <img
-                      src="assets/imgs/page/dashboard/profiles.svg"
-                      alt="jobBox"
-                    />
-                    <span className="name"> <Link to="/profile"> My Profiles</Link></span>
-                  </a>
-                </li>
-                <li>
-                  {" "}
-                  <a className="dashboard2" href="login.html">
-                    <img
-                      src="assets/imgs/page/dashboard/logout.svg"
-                      alt="jobBox"
-                    />
-                    <span className="name">
-                    {isLogedIn ? (
-                <Link
-                 
-                  onClick={Logout}
-                >
-                  logout
-                </Link>
-              ) : (
-                <>
-                  <Link to="/register"> Register </Link>
-                  <Link
-                    to="/login"
-                    className="btn btn-default btn-shadow ml-40 hover-up"
-                  >
-                    Sign in
-                  </Link>
-                </>
-              )}
-              </span>
-                  </a>
-                </li>
-         
-         
-         
-        </ul>
-      </nav>
-     
-      
-      <div className="sidebar-border-bg mt-50">
-        <span className="text-grey">WE ARE</span>
-        <span className="text-hiring">HIRING</span>
-       
-        <div className="mt-15">
-          <a className="btn btn-paragraph-2" href="#">
-            Know More
+    <a className="btn btn-expanded" />
+    <nav className="nav-main-menu">
+      <ul className="main-menu">
+        <li>
+          {" "}
+          <a className="dashboard2 active" >
+            <img
+              src="assets/imgs/page/dashboard/dashboard.svg"
+              alt="jobBox"
+            />
+            <span className="name"><Link to="/admin-dashboard">Tableau de bord</Link> </span>
           </a>
-        </div>
+        </li>
+        <li>
+          {" "}
+          <a className="dashboard2" >
+            <img src="assets/imgs/page/dashboard/jobs.svg" alt="jobBox" />
+            <span className="name"><Link to="/postlist">Mes emplois</Link> </span>
+          </a>
+        </li>
+        <li>
+          {" "}
+          <a className="dashboard2" >
+            <img
+              src="assets/imgs/page/dashboard/candidates.svg"
+              alt="jobBox"
+            />
+            <span className="name"><Link to="/postcondidat">Candidats</Link></span>
+          </a>
+        </li>
+        <li>
+          {" "}
+          <a className="dashboard2" >
+            <img src="assets/imgs/page/dashboard/tasks.svg" alt="jobBox" />
+               <span className="name"><Link to="/condidataccepted"> Acceptés</Link></span>
+          </a>
+        </li>
+       
+        
+        
+        <li>
+                {" "}
+                <a className="dashboard2" href="profile.html">
+                  <img
+                    src="assets/imgs/page/dashboard/profiles.svg"
+                    alt="jobBox"
+                  />
+                  <span className="name"> <Link to="/profile"> Mon profile</Link></span>
+                </a>
+              </li>
+              <li>
+                {" "}
+                <a className="dashboard2" href="login.html">
+                  <img
+                    src="assets/imgs/page/dashboard/logout.svg"
+                    alt="jobBox"
+                  />
+                  <span className="name">
+                  {isLogedIn ? (
+              <Link
+               
+                onClick={Logout}
+              >
+                Déconnexion
+              </Link>
+            ) : (
+              <>
+                <Link to="/register"> S'inscrire </Link>
+                <Link
+                  to="/login"
+                  className="btn btn-default btn-shadow ml-40 hover-up"
+                >
+                  Se connecter
+                </Link>
+              </>
+            )}
+            </span>
+                </a>
+              </li>
+       
+       
+       
+      </ul>
+    </nav>
+   
+    
+    <div className="sidebar-border-bg mt-50">
+     
+      <span className="text-hiring">ENGAGE</span>
+     
+      <div className="mt-15">
+        <a className="btn btn-paragraph-2" href="#">
+          En savoir plus
+        </a>
       </div>
     </div>
+  </div>
   )
 }
 export default Nav

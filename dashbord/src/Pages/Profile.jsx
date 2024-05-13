@@ -1,8 +1,16 @@
 import React, { useEffect, useState,useRef } from "react";
 import Nav from "../Components/Shared/Nav";
 import Header from "../Components/Shared/Header";
-import { getUserById, updateUserById } from "../Services/AuthApi";
-
+import {
+  getUserById,
+  updateUserImage,
+  updateUserById,
+  
+} from "../Services/userApi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { useUser } from "../auth/useUser";
 export default function Profile() {
   const [user, setUser] = useState({
     _id: "",
@@ -11,7 +19,6 @@ export default function Profile() {
     age: "",
     email: "",
     role: "",
-   password:"",
     image: "",
     phoneNumber: "", // Champ ajouté
     dateOfBirth: "", // Champ ajouté
@@ -23,47 +30,60 @@ export default function Profile() {
     },
     gender: "", // Champ ajouté
   });
+  const [image, setImage] = useState("");
   const [userId, setUserId] = useState("");
   const fileInputRef = useRef(null);
+  const userid = useUser();
+ 
+  const baseUrl = process.env.REACT_APP_API;
+ 
   useEffect(() => {
-    const storeduserId = localStorage.getItem("userID");
-    console.log(storeduserId);
-    console.log("headerhere");
-    setUserId(storeduserId);
-  }, []);
-
-  console.log("the user loged in here is", userId);
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await getUserById(userId);
-        console.log(user);
-        setUser(user);
-      } catch (error) {
-        // Gérer les erreurs
-        console.log(error);
-      }
-    };
-    if (userId) {
-      fetchUser();
+    try {
+      getUserById(userid._id).then((res) => {
+        setUser(res);
+      });
+    } catch (error) {
+      // Gérer les erreurs
+      console.log(error);
     }
-  }, [userId]);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  };
+  }, []);
+ 
 
   const handleSaveChanges = async (e) => {
     e.preventDefault();
-    console.log("updated user id ", userId);
-    console.log("updated user info ", user);
+    console.log(userid);
     try {
-      const updatedUser = await updateUserById(userId, user);
+      // Envoyez les données de l'utilisateur mises à jour à votre backend
+      const updatedUser = await updateUserById(userid._id, user);
       console.log("User updated successfully:", updatedUser);
+
+      // Remettez à zéro l'état de l'image après l'enregistrement réussi
+      setImage(null);
+      toast.success("Données modifié avec succès !");
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.erreur("Données  n'est modifié avec succès !");
     }
   };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const keys = name.split(".");
+    setUser((prevState) => {
+      let updatedData = { ...prevState };
+      let data = updatedData;
+
+      // Iterate over the keys except for the last one to navigate through the nested objects
+      for (let i = 0; i < keys.length - 1; i++) {
+        data[keys[i]] = data[keys[i]] || {}; // Ensure nested structure exists
+        data = data[keys[i]];
+      }
+
+      // Set the value to the last key in the path
+      data[keys[keys.length - 1]] = value;
+      return updatedData;
+    });
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // Obtenez le premier fichier sélectionné
     if (file) {
@@ -72,11 +92,14 @@ export default function Profile() {
       reader.readAsDataURL(file); // Lisez le fichier en tant que données d'URL
       // Gérez l'événement onload pour obtenir l'URL de l'image une fois qu'elle est chargée
       reader.onload = () => {
-        const imageUrl = reader.result; // Obtenez l'URL de l'image
-        setUser({ ...user, image: imageUrl }); // Mettez à jour l'état userData avec l'URL de l'image
+        updateUserImage(file).then((res) => {
+          console.log(res);
+          setUser({ ...user, image: res.data.image });
+        });
       };
     }
   };
+
   const handleButtonClick = () => {
     // Déclenche le clic sur le sélecteur de fichiers
     fileInputRef.current.click();
@@ -86,6 +109,7 @@ export default function Profile() {
 
   return (
     <>
+     <ToastContainer />
       <Header></Header>
       <main className="main">
         <Nav></Nav>
@@ -93,7 +117,7 @@ export default function Profile() {
           <div className="box-content">
             <div className="box-heading">
               <div className="box-title">
-                <h3 className="mb-35">My Profile</h3>
+                <h3 className="mb-35">Mon Profile</h3>
               </div>
               <div className="box-breadcrumb">
                 <div className="breadcrumbs">
@@ -105,7 +129,7 @@ export default function Profile() {
                       </a>
                     </li>
                     <li>
-                      <span>My Profile</span>
+                      <span>Mon Profile</span>
                     </li>
                   </ul>
                 </div>
@@ -118,17 +142,28 @@ export default function Profile() {
                     <div className="panel-white mb-30">
                       <div className="box-padding">
                         <h6 className="color-text-paragraph-2">
-                          Update your profile
+                          Modifier mon profile
                         </h6>
                         <div className="box-profile-image">
                           <div className="img-profile">
-                          {user && user.image && (
-    <img
-      src={user.image} // Utilisez la chaîne base64 directement
-      alt="User Image"
-      style={{ maxWidth: '100%', maxHeight: '100px' }}
-    />
-  )}
+                          {user && user.image ? (
+                              <img
+                                src={baseUrl + user?.image}
+                                alt="User Image"
+                                onChange={handleChange}
+                                style={{ maxWidth: "100%", maxHeight: "200px" }}
+                                onError={(e) =>
+                                  (e.target.src =
+                                    "/assets/imgs/avatar/ava_1.png")
+                                } // Specify the fallback image path
+                              />
+                            ) : (
+                              <img
+                                src="/assets/imgs/avatar/ava_1.png" // Specify the path to your default image
+                                alt="Default User Image"
+                                style={{ maxWidth: "150%", maxHeight: "200px" }}
+                              />
+                            )}
                           </div>
                           <div className="info-profile">
                           <a
@@ -144,7 +179,7 @@ export default function Profile() {
         onChange={handleImageChange}
       />
                            
-                            <a className="btn btn-link">Delete</a>
+                           
                           </div>
                         </div>
 
@@ -159,7 +194,7 @@ export default function Profile() {
                                 className="form-control"
                                 type="text"
                                 name="lastname"
-                                value={user.lastname}
+                                value={user?.lastname}
                                 onChange={handleChange}
                               />
                             </div>
@@ -173,7 +208,7 @@ export default function Profile() {
                                 className="form-control"
                                 type="text"
                                 name="name"
-                                value={user.name}
+                                value={user?.name}
                                 onChange={handleChange}
                               />
                             </div>
@@ -187,7 +222,7 @@ export default function Profile() {
                                 className="form-control"
                                 type="text"
                                 name="age"
-                                value={user.age}
+                                value={user?.age}
                                 onChange={handleChange}
                               />
                             </div>
@@ -201,7 +236,7 @@ export default function Profile() {
                                 className="form-control"
                                 type="text"
                                 name="gender"
-                                value={user.gender}
+                                value={user?.gender}
                                 onChange={handleChange}
                               />
                             </div>
@@ -217,8 +252,8 @@ export default function Profile() {
                                 type="text"
                                 name="dateOfBirth"
                                 value={
-                                  user.dateOfBirth
-                                    ? user.dateOfBirth
+                                  user?.dateOfBirth
+                                    ? user?.dateOfBirth
                                         .replace(/^(0{2})/, "")
                                         .replace(/T.+$/, "")
                                     : ""
@@ -236,7 +271,7 @@ export default function Profile() {
                                 className="form-control"
                                 type="text"
                                 name="phoneNumber"
-                                value={user.phoneNumber}
+                                value={user?.phoneNumber}
                                 onChange={handleChange}
                               />
                             </div>
@@ -250,25 +285,12 @@ export default function Profile() {
                                 className="form-control"
                                 type="text"
                                 name="email"
-                                value={user.email}
+                                value={user?.email}
                                 onChange={handleChange}
                               />
                             </div>
                           </div>
-                          <div className="col-lg-6 col-md-6">
-                            <div className="form-group mb-30">
-                              <label className="font-sm color-text-mutted mb-10">
-                                Mot de Passe
-                              </label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                name="password"
-                                value={user.password}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
+                         
 
                           <div className="col-lg-12">
                             <div className="form-group mt-10">
@@ -276,7 +298,7 @@ export default function Profile() {
                                 className="btn btn-default btn-brand icon-tick"
                                 type="submit"
                               >
-                                Save Change
+                                Enregistrer tous les modifications
                               </button>
                             </div>
                           </div>
@@ -300,10 +322,13 @@ export default function Profile() {
                               <label className="font-sm color-text-mutted mb-10">
                                 Facebook
                               </label>
-                              <input
+                             
+                                <input
                                 className="form-control"
                                 type="text"
-                                placeholder={user.socialProfiles.facebook}
+                               name="socialProfiles.facebook"
+                                value={user?.socialProfiles.facebook}
+                                onChange={handleChange}
                               />
                             </div>
                           </div>
@@ -315,7 +340,9 @@ export default function Profile() {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={user.socialProfiles.twitter}
+                                value={user.socialProfiles.twitter}
+                                name="socialProfiles.twitter"
+                                onChange={handleChange}
                               />
                             </div>
                           </div>
@@ -327,14 +354,17 @@ export default function Profile() {
                               <input
                                 className="form-control"
                                 type="text"
-                                placeholder={user.socialProfiles.linkedIn}
+                                value={user.socialProfiles.linkedIn}
+                                name="socialProfiles.linkedIn"
+                                onChange={handleChange}
                               />
                             </div>
                           </div>
                           <div className="col-lg-12">
                             <div className="form-group mt-0">
-                              <button className="btn btn-default btn-brand icon-tick">
-                                Save Change
+                              <button className="btn btn-default btn-brand icon-tick"
+                               type="submit">
+                               Enregistrer tous les modifications
                               </button>
                             </div>
                           </div>
@@ -346,135 +376,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="mt-10">
-              <div className="section-box">
-                <div className="container">
-                  <div className="panel-white pt-30 pb-30 pl-15 pr-15">
-                    <div className="box-swiper">
-                      <div className="swiper-container swiper-group-10">
-                        <div className="swiper-wrapper">
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/microsoft.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/sony.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/acer.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/nokia.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/asus.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/casio.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/dell.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/panasonic.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/vaio.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                          <div className="swiper-slide">
-                            {" "}
-                            <img
-                              src="assets/imgs/page/dashboard/sony.svg"
-                              alt="jobBox"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <footer className="footer mt-20">
-              <div className="container">
-                <div className="box-footer">
-                  <div className="row">
-                    <div className="col-md-6 col-sm-12 mb-25 text-center text-md-start">
-                      <p className="font-sm color-text-paragraph-2">
-                        © 2022 -{" "}
-                        <a
-                          className="color-brand-2"
-                          href="https://themeforest.net/item/jobbox-job-portal-html-bootstrap-5-template/39217891"
-                          target="_blank"
-                        >
-                          JobBox{" "}
-                        </a>
-                        Dashboard <span> Made by</span>
-                        <a
-                          className="color-brand-2"
-                          href="http://alithemes.com"
-                          target="_blank"
-                        >
-                          {" "}
-                          AliThemes
-                        </a>
-                      </p>
-                    </div>
-                    <div className="col-md-6 col-sm-12 text-center text-md-end mb-25">
-                      <ul className="menu-footer">
-                        <li>
-                          <a href="#">About</a>
-                        </li>
-                        <li>
-                          <a href="#">Careers</a>
-                        </li>
-                        <li>
-                          <a href="#">Policy</a>
-                        </li>
-                        <li>
-                          <a href="#">Contact</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </footer>
+           
           </div>
         </form>
       </main>

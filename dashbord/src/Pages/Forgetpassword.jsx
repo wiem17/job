@@ -1,53 +1,42 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
-import { login } from "../Services/AuthApi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { forgetpassword} from "../Services/AuthApi";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email != null || password != null) {
-      login(email, password)
-        .then((res) => {
-          const token = res.data.mytoken;
-          const decoded = jwtDecode(token);
-          if (decoded.role === "ADMIN") {
-            localStorage.setItem("token", token);
-            localStorage.setItem("isLogedIn", true);
-          
-          
-              navigate("/admin-dashboard");
-          
-          } else {
-            alert("compte condidat requis");
-          }
-        })
-        .catch(() => {
-          alert("email ou mot de passe invalide");
-        });
-    } else {
-      alert("veuillez remplir tous les champs");
-    }
+    if (email != null) {
+      try {
+        await forgetpassword(email);
+        toast.success("Email de réinitialisation du mot de passe envoyé avec succès");
+      } catch (error) {
+        console.error("Erreur lors de l'envoi de la requête forgetpassword :", error);
+        toast.error("Erreur lors de l'envoi de l'email de réinitialisation du mot de passe");
+      }
+    } 
   };
 
   return (
     <>
+     <ToastContainer />
       <main className="main d-flex align-items-center">
         <section  className="pt-100 login-register w-100">
           <div className="container">
             <div className="row login-register-cover">
               <div className="col-lg-4 col-md-6 col-sm-12 mx-auto">
                 <div className="text-center">
-                  <p className="font-sm text-brand-2">Bienvenue ! </p>
-                  <h2 className="mt-10 mb-5 text-brand-1">Connexion</h2>
+                  <p className="font-sm text-brand-2">Mot de passe oublié</p>
+                  <h2 className="mt-10 mb-5 text-brand-1">Réinitialiser le mot de passe</h2>
                   <p className="font-sm text-muted mb-30">
-                   
-                  Accédez à toutes les fonctionnalités. 
+                  Mettre votre Email.
                   </p>
                 </div>
                 <form
@@ -55,7 +44,7 @@ function Login() {
                   onSubmit={handleLogin}
                 >
                   <Form.Group>
-                    <Form.Label>Adresse e-mail</Form.Label>
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
@@ -64,20 +53,11 @@ function Login() {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Mot de passe</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Enter password"
-                      value={password}
-                      required
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </Form.Group>
+                 
                   <div className="login_footer form-group d-flex justify-content-between">
                     <label className="cb-container"></label>
-                    <a className="text-muted">
-                    <Link to="/forget">Mot de passe oublié </Link> 
+                    <a className="text-muted" href="page-contact.html">
+                    <Link to="/"> Connexion</Link>
                     </a>
                   </div>
                   <div className="form-group">
@@ -85,12 +65,10 @@ function Login() {
                       className="btn btn-brand-1 hover-up w-100"
                       type="submit"
                     >
-                      Connexion
+                      Envoyer
                     </Button>
                   </div>
-                  <div className="text-muted text-center">
-                  
-                  </div>
+                 
                 </form>
               </div>
               <div className="img-1 d-none d-lg-block">

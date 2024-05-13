@@ -2,6 +2,7 @@ import React from "react";
 import Main from "./Components/Main";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from "./Pages/Login";
+import Forgetpassword from "./Pages/Forgetpassword";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 function App() {
@@ -25,6 +26,15 @@ function App() {
             <PrivateRoute>
               <Main />
             </PrivateRoute>
+          }
+        />
+         <Route
+          path="/forget"
+          exact
+          element={
+            <PublicRoute>
+              <Forgetpassword />
+            </PublicRoute>
           }
         />
       </Routes>

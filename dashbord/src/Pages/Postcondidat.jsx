@@ -3,7 +3,7 @@ import Nav from '../Components/Shared/Nav'
 import Header from '../Components/Shared/Header'
 import { getAllPostes } from "../Services/PosteService";
 import { getNonAcceptedCondidatsByPosteTitle } from "../Services/CondidatService";
-import {  deletedCondidat, acceptCondidat } from "../Services/CondidatService";
+import {  refuseCondidat, acceptCondidat } from "../Services/CondidatService";
 const baseUrl = process.env.REACT_APP_API;
 
  function Postcondidat() {
@@ -33,7 +33,7 @@ const baseUrl = process.env.REACT_APP_API;
         };
         const handleDelete = async (id) => {
           try {
-            await deletedCondidat(id);
+            await refuseCondidat(id);
             const updatedCondidats = condidats.filter((condidat) => condidat._id !== id);
             if (updatedCondidats.length > 0) {
               setCondidats(updatedCondidats);
@@ -178,11 +178,28 @@ const baseUrl = process.env.REACT_APP_API;
                     <div className="col-xl-6 col-lg-6 col-md-6 mb-4" key={condidat._id}>
                       <div className="card-grid-2 hover-up">
                         <div className="card-grid-2-image-left">
+                        <div className="card-grid-2-image-rd online">
+                        <figure>
+  {condidat.userID.image ? (
+    <img
+      src={baseUrl + condidat.userID.image}
+      alt="User Image"
+     
+    />
+  ) : (
+    <img
+      src="/assets/imgs/avatar/ava_1.png" // Spécifiez le chemin vers votre image par défaut
+      alt="Image par défaut"
+     
+    />
+  )}
+</figure>
+                              
                           <div className="card-profile pt-10">
                             <a href={`${baseUrl}${condidat.file}`}>
-                              <h5>{condidat.name}</h5>
-                            </a>
                             <span className="font-xs" style={{ color: '#a56de2' }}>{condidat.titrePoste}</span>
+                            </a>
+                           
                             <div className="rate-reviews-small pt-3">
                               <span className="font-xs color-text-mutted">{condidat.email}</span>
                             </div>
@@ -190,6 +207,7 @@ const baseUrl = process.env.REACT_APP_API;
                               <span className="font-xs color-text-paragraph-2">{condidat.lettre_de_motivation}</span>
                             </div>
                           </div>
+                        </div>
                         </div>
                         <div className="card-block-info">
                           <div className="card-2-bottom">
@@ -209,51 +227,7 @@ const baseUrl = process.env.REACT_APP_API;
         </div>
       </div>
 
-      <footer className="footer mt-20">
-        <div className="container">
-          <div className="box-footer">
-            <div className="row">
-              <div className="col-md-6 col-sm-12 mb-25 text-center text-md-start">
-                <p className="font-sm color-text-paragraph-2">
-                  © 2022 -{" "}
-                  <a
-                    className="color-brand-2"
-                    href="https://themeforest.net/item/jobbox-job-portal-html-bootstrap-5-template/39217891"
-                    target="_blank"
-                  >
-                    JobBox{" "}
-                  </a>
-                  Dashboard <span> Made by</span>
-                  <a
-                    className="color-brand-2"
-                    href="http://alithemes.com"
-                    target="_blank"
-                  >
-                    {" "}
-                    AliThemes
-                  </a>
-                </p>
-              </div>
-              <div className="col-md-6 col-sm-12 text-center text-md-end mb-25">
-                <ul className="menu-footer">
-                  <li>
-                    <a href="#">About</a>
-                  </li>
-                  <li>
-                    <a href="#">Careers</a>
-                  </li>
-                  <li>
-                    <a href="#">Policy</a>
-                  </li>
-                  <li>
-                    <a href="#">Contact</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   </main>
     </>

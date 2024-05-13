@@ -34,58 +34,32 @@ function Header() {
           <div className="header-nav">
             <nav className="nav-main-menu">
               <ul className="main-menu">
-                <li className="has-children">
-                  <Link to="/">Home</Link>
+                <li >
+                  <Link to="/">Accueil</Link>
                 </li>
+                <li >
+                  <a> <Link to="/jobs"> Liste des emplois  </Link></a>
+                  
+                </li>
+                
                 <li className="has-children">
-                  <a href="jobs-grid.html">Find a Job</a>
+                  <a >Pages</a>
                   <ul className="sub-menu">
                     <li>
-                      <a href="jobs-grid.html">Jobs Grid</a>
+                      <a >About Us</a>
                     </li>
                     <li>
-                      <Link to="/jobs"> Jobs List </Link>
+                      <a >Pricing Plan</a>
                     </li>
                     <li>
-                      <a href="job-details.html">Jobs Details</a>
-                    </li>
-                    <li>
-                      <a href="job-details-2.html">Jobs Details 2</a>
-                    </li>
-                  </ul>
-                </li>
-                <li className="has-children">
-                  <a href="candidates-grid.html">Candidates</a>
-                  <ul className="sub-menu">
-                    <li>
-                      <a href="candidates-grid.html">Candidates Grid</a>
-                    </li>
-                    <li>
-                      <a href="candidate-details.html">Candidate Details</a>
-                    </li>
-                    <li>
-                      <a href="candidate-profile.html">Candidate Profile</a>
-                    </li>
-                  </ul>
-                </li>
-                <li className="has-children">
-                  <a href="blog-grid.html">Pages</a>
-                  <ul className="sub-menu">
-                    <li>
-                      <a href="page-about.html">About Us</a>
-                    </li>
-                    <li>
-                      <a href="page-pricing.html">Pricing Plan</a>
-                    </li>
-                    <li>
-                      <a href="page-contact.html">Contact Us</a>
+                      <a >Contact Us</a>
                     </li>
 
                     <li>
-                      <Link to="/login"> Sign in </Link>
+                      <Link to="/login"> Connexion </Link>
                     </li>
                     <li>
-                      <a href="page-reset-password.html">Reset Password</a>
+                      <a >Reset Password</a>
                     </li>
                     <li>
                       <a href="page-content-protected.html">
@@ -97,20 +71,7 @@ function Header() {
                     </li>
                   </ul>
                 </li>
-                <li className="has-children">
-                  <a href="blog-grid.html">Blog</a>
-                  <ul className="sub-menu">
-                    <li>
-                      <a href="blog-grid.html">Blog Grid</a>
-                    </li>
-                    <li>
-                      <a href="blog-grid-2.html">Blog Grid 2</a>
-                    </li>
-                    <li>
-                      <a href="blog-details.html">Blog Single</a>
-                    </li>
-                  </ul>
-                </li>
+               
               </ul>
             </nav>
             <div className="burger-icon burger-icon-white">
@@ -126,16 +87,16 @@ function Header() {
                   className="btn btn-default btn-shadow ml-40 hover-up"
                   onClick={Logout}
                 >
-                  logout
+                   Déconnexion
                 </Link>
               ) : (
                 <>
-                  <Link to="/register"> Register </Link>
+                  <Link to="/register">  S'inscrire </Link>
                   <Link
                     to="/login"
                     className="btn btn-default btn-shadow ml-40 hover-up"
                   >
-                    Sign in
+                    Se connecter
                   </Link>
                 </>
               )}

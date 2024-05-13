@@ -13,7 +13,7 @@ function Header() {
               <img alt="jobBox" src="assets/imgs/page/dashboard/logo.svg" />
             </a>
           </div>
-          <span className="btn btn-grey-small ml-10">Admin area</span>
+         
         </div>
         
        
@@ -21,7 +21,7 @@ function Header() {
           <div className="block-signin">
            
               
-              <Link to="/post"   className="btn btn-default icon-edit hover-up"> Post Job </Link>
+              <Link to="/post"   className="btn btn-default icon-edit hover-up"> Poster une offre </Link>
             <div className="dropdown d-inline-block">
               <a
                 className="btn btn-notify"
@@ -47,7 +47,7 @@ function Header() {
                 </li>
                 <li>
                   <a className="dropdown-item" href="#">
-                    20 replies
+                    20 réponses
                   </a>
                 </li>
               </ul>
@@ -58,6 +58,7 @@ function Header() {
       </div>
     </div>
   </header>
+
   )
 }
 

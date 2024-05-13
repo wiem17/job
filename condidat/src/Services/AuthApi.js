@@ -40,3 +40,13 @@ export async function register(objRegister) {
     console.log(error);
   }
 }
+export async function forgetpassword(email) {
+  const body = { email: email };
+  try {
+    const response = await axios.post(`${baseUrl}api/forgot-password`, body);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error; // Lance l'erreur en cas d'échec
+  }
+}

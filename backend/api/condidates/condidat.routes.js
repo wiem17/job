@@ -1,20 +1,44 @@
 module.exports = (app) => {
-    const condidatController = require("./condidat.controllers");
-    const upload = require("../../middleware/multer");
+  const condidatController = require("./condidat.controllers");
+  const upload = require("../../middleware/multer");
+  const { checkToken } = require("../../middleware/tokenValidation");
 
-    var router = require("express").Router();
-router.post('/create', upload, condidatController.createCondidat);
- router.get("/", condidatController.getAllCondidats);
+  var router = require("express").Router();
+  router.post("/create", checkToken, upload, condidatController.createCondidat);
+  router.get("/", condidatController.getAllCondidats);
 
- router.get("/:id", condidatController.getCondidatById);
-  router.delete("/:id", condidatController.deleteCondidatById);
- router.get('/con/acceptedcondidats', condidatController.getAcceptedCondidats);
- router.put('/:id/accept', condidatController.acceptCondidat);
- router.get('/poste/:titre', condidatController.getCondidatsByPosteTitle);
- router.get('/count/condidat', condidatController.countTotalCondidates);
- // Route pour obtenir tous les condidats acceptés par titre de poste
-router.get('/accepted/:titre', condidatController.getAcceptedCondidatsByPosteTitle);
-    
-router.get('/nonaccepted/:titre',  condidatController.getNonAcceptedCondidatsByPosteTitle); 
-    app.use("/condidates", router);
- };
+  router.get("/:id", checkToken, condidatController.getCondidatById);
+  router.delete("/:id", checkToken, condidatController.deleteCondidatById);
+  router.get(
+    "/con/acceptedcondidats",
+    checkToken,
+    condidatController.getAcceptedCondidats
+  );
+  router.put("/:id/accept", condidatController.acceptCondidat);
+  router.put("/:id/refuse", condidatController.refuseCondidat);
+  router.get(
+    "/poste/:titre",
+    checkToken,
+    condidatController.getCondidatsByPosteTitle
+  );
+  router.get(
+    "/count/condidat",
+    checkToken,
+    condidatController.countTotalCondidates
+  );
+  // Route pour obtenir tous les condidats acceptés par titre de poste
+  router.get(
+    "/accepted/:titre",
+    checkToken,
+    condidatController.getAcceptedCondidatsByPosteTitle
+  );
+
+  router.get(
+    "/nonaccepted/:titre",
+    checkToken,
+    condidatController.getNonAcceptedCondidatsByPosteTitle
+  );
+  router.get('/count/accepted', condidatController.countAcceptedCondidates);
+router.get('/count/refused', condidatController.countRefusedCondidates);
+  app.use("/condidates", router);
+};

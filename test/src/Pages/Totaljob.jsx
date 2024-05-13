@@ -20,7 +20,7 @@ const TotalPostesCounter = () => {
   return (
     <span className="color-brand-2">
       {totalPostes !== null ? (
-        `${totalPostes} Jobs`
+        `${totalPostes} Postes`
       ) : (
         'Chargement...'
       )} 

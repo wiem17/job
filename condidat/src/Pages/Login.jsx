@@ -19,6 +19,7 @@ function Login() {
           const decoded = jwtDecode(token);
           if (decoded.role === "CONDIDAT") {
             localStorage.setItem("token", token);
+            localStorage.setItem("isLogedIn", true);
             setTimeout(() => {
               window.location.reload(false);
               //navigate("/");
@@ -42,10 +43,11 @@ function Login() {
             <div className="row login-register-cover">
               <div className="col-lg-4 col-md-6 col-sm-12 mx-auto">
                 <div className="text-center">
-                  <p className="font-sm text-brand-2">Welcome back! </p>
-                  <h2 className="mt-10 mb-5 text-brand-1">Member Login</h2>
+                  <p className="font-sm text-brand-2">Bienvenue !</p>
+                  <h2 className="mt-10 mb-5 text-brand-1">Connexion</h2>
                   <p className="font-sm text-muted mb-30">
-                    Access to all features. No credit card required.
+                   
+                  Accédez à toutes les fonctionnalités. 
                   </p>
                 </div>
                 <form
@@ -53,7 +55,7 @@ function Login() {
                   onSubmit={handleLogin}
                 >
                   <Form.Group>
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Adresse e-mail</Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
@@ -63,7 +65,7 @@ function Login() {
                     />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>Mot de passe</Form.Label>
                     <Form.Control
                       type="password"
                       placeholder="Enter password"
@@ -74,8 +76,8 @@ function Login() {
                   </Form.Group>
                   <div className="login_footer form-group d-flex justify-content-between">
                     <label className="cb-container"></label>
-                    <a className="text-muted" href="page-contact.html">
-                      Forgot Password
+                    <a className="text-muted" >
+                    <Link to="/forget">Mot de passe oublié</Link>
                     </a>
                   </div>
                   <div className="form-group">
@@ -83,11 +85,11 @@ function Login() {
                       className="btn btn-brand-1 hover-up w-100"
                       type="submit"
                     >
-                      Login
+                      Connexion
                     </Button>
                   </div>
                   <div className="text-muted text-center">
-                    Don't have an Account? <Link to="/register"> Sign up </Link>
+                  Vous n'avez pas de compte ? <Link to="/register"> Inscrivez-vous </Link>
                   </div>
                 </form>
               </div>

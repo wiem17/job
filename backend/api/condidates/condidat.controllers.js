@@ -4,29 +4,34 @@ require("dotenv").config();
 
 // Créer un nouveau condidat
 exports.createCondidat = async (req, res, next) => {
-  const { userID, email, lettre_de_motivation, titrePoste } = req.body; // Ajoutez le titre du poste à la requête
-  const { file } = req;
-  
-  const newCondidat = new CondidatSchema({
-    userID,
-    email,
-    lettre_de_motivation,
-    titrePoste, // Ajoutez le titre du poste à l'objet newCondidat
-   
-    file: (file && file.filename) || null,
-  });
+  const { userID, titrePoste ,email,lettre_de_motivation} = req.body;
+  const { file } = req; // Extract file from request
 
   try {
-    const saved = await newCondidat.save();
-    return res.send({
-      success: true,
-      information: saved,
+    // Vérifier si l'utilisateur a déjà postulé au poste spécifique
+    const existingCondidat = await CondidatSchema.findOne({ userID, titrePoste });
+
+    if (existingCondidat) {
+      return res.status(400).json({ success: false, error: "Vous avez déjà postulé à ce poste" });
+    }
+
+    // Si l'utilisateur n'a pas déjà postulé au poste spécifique, ajouter la candidature
+    const newCondidat = new CondidatSchema({
+      userID,
+      titrePoste,
+      email,
+      lettre_de_motivation,
+      file: (file && file.filename) || null, // Include file in new CondidatSchema instance
     });
-  } catch (e) {
-    next(e);
+
+    const saved = await newCondidat.save();
+
+    return res.status(201).json({ success: true, information: saved });
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du candidat:", error);
+    return res.status(500).json({ success: false, error: "Erreur lors de l'ajout du candidat" });
   }
 };
-
 // Obtenir tous les condidats
 exports.getAllCondidats = async (req, res, next) => {
   try {
@@ -110,6 +115,20 @@ exports.acceptCondidat = async (req, res, next) => {
     res.status(500).json({ error: "Failed to accept condidat" });
   }
 };
+exports.refuseCondidat = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updatedCondidat = await CondidatSchema.findByIdAndUpdate(
+      id,
+      { accepted: false },
+      { new: false }
+    );
+    res.json(updatedCondidat);
+  } catch (error) {
+    console.error("Error refusé condidat:", error);
+    res.status(500).json({ error: "Failed to refuse condidat" });
+  }
+};
 exports.getCondidatsByPosteTitle = async (req, res, next) => {
   const { titre } = req.params;
   try {
@@ -154,7 +173,7 @@ exports.getAcceptedCondidatsByPosteTitle = async (req, res, next) => {
     const acceptedCondidats = await CondidatSchema.find({
       titrePoste: titre,
       accepted: true,
-    }).select("name email lettre_de_motivation file titrePoste");
+    }).populate("userID", "name email image");
 
     // Si aucun candidat accepté n'est trouvé pour ce titre de poste
     if (acceptedCondidats.length === 0) {
@@ -179,17 +198,20 @@ exports.getAcceptedCondidatsByPosteTitle = async (req, res, next) => {
 };
 exports.getNonAcceptedCondidatsByPosteTitle = async (req, res, next) => {
   const { titre } = req.params;
+  console.log("Titre de poste:", titre);
   try {
     // Recherche des candidats non acceptés avec le titre de poste spécifique
     const nonAcceptedCondidats = await CondidatSchema.find({
       titrePoste: titre,
-      accepted: false,
-    }).populate("userID", "name email"); // Populate the userID field with user information
+      accepted: "en attente",
+    }).populate("userID", "name email image"); // Populate the userID field with user information
+    console.log("Résultats de la recherche:", nonAcceptedCondidats);
 
     // Si aucun candidat non accepté n'est trouvé pour ce titre de poste
     if (nonAcceptedCondidats.length === 0) {
       return res.status(404).json({
         success: false,
+        
         message:
           "Aucun candidat non accepté trouvé pour le titre de poste spécifié",
       });
@@ -207,5 +229,23 @@ exports.getNonAcceptedCondidatsByPosteTitle = async (req, res, next) => {
       message:
         "Une erreur s'est produite lors de la récupération des candidats non acceptés",
     });
+  }
+};
+exports.countAcceptedCondidates = async (req, res) => {
+  try {
+    const totalAcceptedCondidates = await CondidatSchema.countDocuments({ accepted: true });
+    res.status(200).json({ count: totalAcceptedCondidates });
+  } catch (err) {
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+};
+
+// Méthode pour obtenir le nombre total de candidats refusés
+exports.countRefusedCondidates = async (req, res) => {
+  try {
+    const totalRefusedCondidates = await CondidatSchema.countDocuments({ accepted: false });
+    res.status(200).json({ count: totalRefusedCondidates });
+  } catch (err) {
+    res.status(500).json({ error: "Erreur interne du serveur" });
   }
 };

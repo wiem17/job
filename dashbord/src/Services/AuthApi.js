@@ -19,6 +19,16 @@ export async function login(email, password) {
     console.log(error);
   }
 }
+export async function forgetpassword(email) {
+  const body = { email: email };
+  try {
+    const response = await axios.post(`${baseUrl}api/forgot-password`, body);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error; // Lance l'erreur en cas d'échec
+  }
+}
 
 /**
  * The function `register` sends a POST request to the server to register a user with the provided

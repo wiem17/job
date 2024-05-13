@@ -13,10 +13,12 @@ import Totaljob from "./Totaljob";
 import ApplyJobModal from "./ApplyJobModal";
 import Header from "../Components/Shared/Header";
 import Footer from "../Components/Shared/Footer";
+import { useUser } from "../auth/useUser";
 
 function Post() {
+  const user = useUser();
   const modalRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [postes, setPostes] = useState([]);
   const [condidat, setCondidat] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,6 +28,7 @@ function Post() {
   const [userID, setuserID] = useState("");
   const [userRole, setuserRole] = useState("");
   const handleChildClick = (value) => {
+    setIsOpen(setIsOpen)
     console.log("job titre " + value);
     setValueFromChild(value);
   };
@@ -35,7 +38,7 @@ function Post() {
     condidat.titrePoste = valueFromChild;
     // Vérifiez si tous les champs sont remplis
     if (
-      !condidat.email ||
+      //!condidat.email ||
       !condidat.lettre_de_motivation ||
       !condidat.titrePoste ||
       !condidat.file
@@ -74,7 +77,7 @@ function Post() {
     } finally {
       setIsOpen(false);
       document
-        .getElementById("ModalApplyJobForm")
+.getElementById("ModalApplyJobForm")
         .dispatchEvent(new Event("hidden.bs.modal"));
     }
   };
@@ -87,6 +90,9 @@ function Post() {
     console.log(storedLogedStatus);
     setisLogedIn(storedLogedStatus);
   }, []);
+  console.log("UserID:", userID);
+  console.log("UserRole:", userRole);
+
   return (
     <>
       <ToastContainer />
@@ -181,7 +187,7 @@ function Post() {
                     name="login"
                   >
                     {" "}
-                    Apply Job
+                    Postulez à ce poste
                   </button>
                 </div>
                 <div className="text-muted text-center">

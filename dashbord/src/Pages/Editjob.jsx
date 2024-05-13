@@ -8,15 +8,22 @@ import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 
 import Header from '../Components/Shared/Header'
-import { updatePoste } from "../Services/PosteService";
+import { updatePoste , getPosteById } from "../Services/PosteService";
 import { useParams, } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import Nav from '../Components/Shared/Nav'
 
 
 
+
+import { getSession } from "../utils/SessionUtils";
+
 const baseUrl = process.env.REACT_APP_API;
 
+/* Setting the header for the axios request. */
+const config = {
+  headers: { Authorization: `Bearer ${getSession("token")}` },
+};
 const PosteList = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -35,7 +42,7 @@ const PosteList = () => {
   useEffect(() => {
     const fetchPosteData = async (id) => {
       try {
-        const response = await Axios.get(`${baseUrl}api/postes/po/${id}`);
+        const response = await Axios.get(`${baseUrl}api/postes/po/${id}` ,config);
         console.log("get product successful:", response.data);
         setNewPoste(response.data);
       } catch (error) {
@@ -50,7 +57,7 @@ const PosteList = () => {
     if (imgObject && imgObject.public_id) {
       const publicId = imgObject.public_id;
 
-      Axios.delete(`${baseUrl}api/postes/${publicId}`)
+      Axios.delete(`${baseUrl}api/postes/${publicId}` ,config)
         .then((response) => {
           console.log("Delete request successful:", response.data);
 

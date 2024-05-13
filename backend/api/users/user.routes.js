@@ -13,8 +13,7 @@ module.exports = (app) => {
   router.get("/:id", checkToken, userController.getUserById);
   router.put("/:id", checkToken, userController.updateUserById);
   router.delete("/:id", checkToken, userController.deleteUserById);
-  router.get("/role/admin", checkToken, userController.getAdminUsers);
-  router.get("/my-condidats/:userId", checkToken, userController.getUserCondidats);
+  router.get("/my-condidats/:id", checkToken, userController.getUserCondidats);
   router.patch("/update-image", checkToken, myMulter, userController.updateUserImageById);
 
   app.use("/users", router);

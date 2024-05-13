@@ -18,7 +18,7 @@ const condidatSchema = new mongoose.Schema({
   lettre_de_motivation: { type: String },
   file: { type: String },
 
-  accepted: { type: Boolean, default: false },
+  accepted: { type: String, default: "en attente" },
   titrePoste: {
     type: String,
     required: [true, "Titre du poste is required"],

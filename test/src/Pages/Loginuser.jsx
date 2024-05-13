@@ -28,7 +28,7 @@ function Login() {
       console.log("userRole:", role);
 
       // Redirection vers la page d'accueil
-      navigate("/");
+      navigate("/jobs");
     });
   };
   return (

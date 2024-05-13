@@ -1,11 +1,21 @@
 
 import axios from 'axios';
 
+
+
+
+import { getSession } from "../utils/SessionUtils";
+
+
+
 const baseUrl = process.env.REACT_APP_API;
 
+const config = {
+  headers: { Authorization: `Bearer ${getSession("token")}` },
+};
 export const getAllPostes = async () => {
   try {
-    const response = await axios.get(`${baseUrl}api/postes/getallpostes`);
+    const response = await axios.get(`${baseUrl}api/postes/getallpostes` );
     return response.data;
   } catch (error) {
     console.error('Error fetching postes:', error);
@@ -24,7 +34,7 @@ export const getLatestPostes = async () => {
 
 export const getPosteById = async (id) => {
   try {
-    const response = await axios.get(`${baseUrl}api/postes/po/${id}`);
+    const response = await axios.get(`${baseUrl}api/postes/po/${id}` );
     return response.data; 
   } catch (error) {
     throw error; 
@@ -43,7 +53,7 @@ export async function createPoste(objPoste) {
       image: objPoste.image,
     };
     try {
-      const response = await axios.post(`${baseUrl}api/postes/addposte`, body);
+      const response = await axios.post(`${baseUrl}api/postes/addposte`, body , config);
       return response;
     } catch (error) {
       console.log(error);
@@ -52,7 +62,7 @@ export async function createPoste(objPoste) {
 
   export const updatePoste = async (posteId, posteData) => {
     try {
-      const response = await axios.put(`${baseUrl}api/postes/updateposte/${posteId}`, posteData);
+      const response = await axios.put(`${baseUrl}api/postes/updateposte/${posteId}`, posteData , config);
       return response;
     } catch (error) {
       console.error('Error updating poste:', error);
@@ -63,7 +73,7 @@ export async function createPoste(objPoste) {
 
 export const deletePoste = async (posteId) => {
   try {
-    const response = await axios.delete(`${baseUrl}api/postes/deletepo/${posteId}`);
+    const response = await axios.delete(`${baseUrl}api/postes/deletepo/${posteId}` , config);
     return response.data;
   } catch (error) {
     console.error('Error deleting poste:', error);
@@ -73,7 +83,7 @@ export const deletePoste = async (posteId) => {
 
 export const countTotalPostes = async () => {
   try {
-    const response = await axios.get(`${baseUrl}api/postes/count/poste`);
+    const response = await axios.get(`${baseUrl}api/postes/count/poste` , config);
     return response.data.count;
   } catch (error) {
     console.error('Error counting total postes:', error);

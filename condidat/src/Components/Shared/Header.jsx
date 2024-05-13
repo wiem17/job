@@ -9,7 +9,9 @@ function Header() {
     setisLogedIn(false);
     localStorage.removeItem("userID");
     localStorage.removeItem("isLogedIn");
-    navigate("/");
+    localStorage.removeItem("token");
+    window.location.reload();
+   
   };
   useEffect(() => {
     const storedLogedStatus = localStorage.getItem("isLogedIn");
@@ -46,13 +48,8 @@ function Header() {
                 </Link>
               ) : (
                 <>
-                  <Link to="/register"> Register </Link>
-                  <Link
-                    to="/login"
-                    className="btn btn-default btn-shadow ml-40 hover-up"
-                  >
-                    Sign in
-                  </Link>
+                 
+                
                 </>
               )}
             </div>

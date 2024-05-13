@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "is required"],
     unique: true,
-    index: true,
+    
   },
   password: {
     type: String,
@@ -41,7 +41,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["Male", "Female", "Other"]
   },
-  
+  resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
+   
 
 
 

@@ -13,11 +13,11 @@ exports.getAllUsers = async (req, res) => {
     });
 };
 exports.getUserCondidats = async (req, res, next) => {
-  const { userId } = req.params;
-  console.log(userId);
+  const id = req.params.id;
+  console.log(id);
   try {
     // Find all condidats associated with the provided user ID
-    const condidats = await CondidatSchema.find({ userID: userId });
+    const condidats = await CondidatSchema.find({ userID: id });
 
     // If no condidats are found for the provided user ID
     if (condidats.length === 0) {
@@ -36,15 +36,29 @@ exports.getUserCondidats = async (req, res, next) => {
     console.error("Error fetching condidats by user ID:", error);
     res.status(500).json({
       success: false,
-      message: "Une erreur s'est produite lors de la récupération des condidats",
+      message:
+        "Une erreur s'est produite lors de la récupération des condidats",
     });
   }
 };
 exports.getUserById = (req, res) => {
   myid = req.params.id;
   UserSchema.findOne({ _id: myid })
-    .then((users) => {
-      res.send(users);
+    .then((user) => {
+      res.send({
+        socialProfiles: user.socialProfiles,
+        _id: user._id,
+        name: user.name,
+        lastname: user.lastname,
+        age: user.age,
+        role: user.role,
+        email: user.email,
+        image: user.image,
+        phoneNumber: user.phoneNumber,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        __v: user.__v
+      });
     })
     .catch((err) => {
       res.send(err);
@@ -56,16 +70,12 @@ exports.updateUserById = async (req, res) => {
   const newData = req.body;
 
   try {
-    // Vérifier si le mot de passe a été modifié
-    if (newData.password) {
-      // Crypter le nouveau mot de passe
-      const salt = bcrypt.genSaltSync(10);
-      const cryptedPass = await bcrypt.hashSync(newData.password, salt);
-      newData.password = cryptedPass;
-    }
+    
 
     // Mise à jour de l'utilisateur
-    const updatedUser = await UserSchema.findByIdAndUpdate(id, newData, { new: true });
+    const updatedUser = await UserSchema.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
 
     if (!updatedUser) {
       return res.status(404).json({ error: "Utilisateur non trouvé." });
@@ -74,7 +84,9 @@ exports.updateUserById = async (req, res) => {
     res.send(updatedUser);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erreur lors de la mise à jour de l'utilisateur." });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la mise à jour de l'utilisateur." });
   }
 };
 
@@ -88,14 +100,7 @@ exports.deleteUserById = (req, res) => {
       res.send(err);
     });
 };
-exports.getAdminUsers = async (req, res) => {
-  try {
-    const adminUsers = await UserSchema.find({ role: "ADMIN" });
-    res.send(adminUsers);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-};
+
 
 exports.updateUserImageById = async (req, res) => {
   const id = req.user._id;
@@ -107,7 +112,11 @@ exports.updateUserImageById = async (req, res) => {
 
   try {
     // Update user image path in the database
-    const updatedUser = await UserSchema.findByIdAndUpdate(id, { image: file.path }, { new: true });
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      id,
+      { image: file.path },
+      { new: true }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found." });

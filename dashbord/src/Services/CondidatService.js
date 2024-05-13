@@ -1,10 +1,20 @@
 import axios from "axios";
+import { getSession } from "../utils/SessionUtils";
 
+
+
+
+
+const config = {
+  headers: { Authorization: `Bearer ${getSession("token")}` },
+};
 const baseUrl = process.env.REACT_APP_API;
+
+
 
 export const getCondidat = async () => {
   try {
-    const response = await axios.get(`${baseUrl}api/condidates`);
+    const response = await axios.get(`${baseUrl}api/condidates` );
     return response.data;
   } catch (error) {
     throw new Error("Erreur lors de la récupération des condidats");
@@ -13,25 +23,25 @@ export const getCondidat = async () => {
 
 export const getCondidatById = async (id) => {
   try {
-    const response = await axios.get(`${baseUrl}api/condidates/${id}`);
+    const response = await axios.get(`${baseUrl}api/condidates/${id}` ,config);
     return response.data;
   } catch (error) {
     throw new Error("Erreur lors de la récupération de condidat");
   }
 };
 
-export const deletedCondidat = async (id) => {
+export const refuseCondidat = async (id) => {
   try {
-    const response = await axios.delete(`${baseUrl}api/condidates/${id}`);
+    const response = await axios.put(`${baseUrl}api/condidates/${id}/refuse`  );
     return response.data;
   } catch (error) {
-    throw new Error("Erreur lors de la suppression de condidat");
+    throw error.response.data;
   }
 };
 export const getAcceptedCondidats = async () => {
   try {
     const response = await axios.get(
-      `${baseUrl}api/condidates/con/acceptedcondidats`
+      `${baseUrl}api/condidates/con/acceptedcondidats` ,config
     );
     return response.data;
   } catch (error) {
@@ -41,7 +51,7 @@ export const getAcceptedCondidats = async () => {
 
 export const acceptCondidat = async (id) => {
   try {
-    const response = await axios.put(`${baseUrl}api/condidates/${id}/accept`);
+    const response = await axios.put(`${baseUrl}api/condidates/${id}/accept`  );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -49,7 +59,7 @@ export const acceptCondidat = async (id) => {
 };
 export const getCondidatsByPoste = async (titre) => {
   try {
-    const response = await axios.get(`${baseUrl}api/condidates/poste/${titre}`);
+    const response = await axios.get(`${baseUrl}api/condidates/poste/${titre}` );
     return response.data;
   } catch (error) {
     throw new Error(
@@ -59,17 +69,35 @@ export const getCondidatsByPoste = async (titre) => {
 };
 export const countTotalCondidates = async () => {
   try {
-    const response = await axios.get(`${baseUrl}api/condidates/count/condidat`);
+    const response = await axios.get(`${baseUrl}api/condidates/count/condidat` ,config);
     return response.data.count;
   } catch (error) {
     console.error("Error counting total condidat:", error);
     throw error; // Remarque : Vous pouvez gérer les erreurs comme vous le souhaitez
   }
 };
+export const countTotalCondidatesaccepté = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/count/accepted` ,config);
+    return response.data.count;
+  } catch (error) {
+    console.error("Error counting total condidat accept:", error);
+    throw error; // Remarque : Vous pouvez gérer les erreurs comme vous le souhaitez
+  }
+};
+export const countTotalCondidatesrefusé = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/count/refused` ,config);
+    return response.data.count;
+  } catch (error) {
+    console.error("Error counting total condidat refuse:", error);
+    throw error; // Remarque : Vous pouvez gérer les erreurs comme vous le souhaitez
+  }
+};
 export const getAcceptedCondidatsByPosteTitle = async (titre) => {
   try {
     const response = await axios.get(
-      `${baseUrl}api/condidates/accepted/${titre}`
+      `${baseUrl}api/condidates/accepted/${titre}` ,config
     );
     return response.data;
   } catch (error) {
@@ -80,7 +108,7 @@ export const getAcceptedCondidatsByPosteTitle = async (titre) => {
 export const getNonAcceptedCondidatsByPosteTitle = async (titre) => {
   try {
     const response = await axios.get(
-      `${baseUrl}api/condidates/nonaccepted/${titre}`
+      `${baseUrl}api/condidates/nonaccepted/${titre}` ,config
     );
     return response.data;
   } catch (error) {

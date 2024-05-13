@@ -6,7 +6,7 @@ import { getAllPostes } from "../Services/PosteService";
 import {getAcceptedCondidatsByPosteTitle } from "../Services/CondidatService";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
-import {  deletedCondidat } from "../Services/CondidatService";
+import { refuseCondidat} from "../Services/CondidatService";
 const baseUrl = process.env.REACT_APP_API;
  function Postcondidataccepter() {
 
@@ -56,7 +56,7 @@ const baseUrl = process.env.REACT_APP_API;
         };
         const handleDelete = async (id) => {
           try {
-            await deletedCondidat(id);
+            await refuseCondidat(id);
             const updatedCondidats = condidats.filter((condidat) => condidat._id !== id);
             if (updatedCondidats.length > 0) {
               setCondidats(updatedCondidats);
@@ -189,90 +189,7 @@ const baseUrl = process.env.REACT_APP_API;
         </div>
       </div>
      
-      <div className="mt-10">
-        <div className="section-box">
-          <div className="container">
-            <div className="panel-white pt-30 pb-30 pl-15 pr-15">
-              <div className="box-swiper">
-                <div className="swiper-container swiper-group-10">
-                  <div className="swiper-wrapper">
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/microsoft.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/sony.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/acer.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/nokia.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/asus.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/casio.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/dell.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/panasonic.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/vaio.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/sony.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+     
       <div className="modal fade" id="ModalApplyJobForm" tabIndex={-1} aria-hidden="true"   onClick={handleCloseModal}>
         <div className="modal-dialog modal-lg">
           <div className="modal-content apply-job-form">
@@ -292,12 +209,28 @@ const baseUrl = process.env.REACT_APP_API;
                   {condidats.map((condidat) => (
                     <div className="col-xl-6 col-lg-6 col-md-6 mb-4" key={condidat._id}>
                       <div className="card-grid-2 hover-up">
-                        <div className="card-grid-2-image-left">
+                     <div className="card-grid-2-image-left">
+                        <div className="card-grid-2-image-rd online">
+                        <figure>
+                               {condidat.userID.image ? (
+                                     <img
+                                     src={baseUrl + condidat.userID.image}
+                                        alt="User Image"
+     
+                                           />
+                                                 ) : (
+                                                 <img
+                                        src="/assets/imgs/avatar/ava_1.png" // Spécifiez le chemin vers votre image par défaut
+                                      alt="Image par défaut"
+     
+                                                />
+                                      )}
+                               </figure>
                           <div className="card-profile pt-10">
                             <a href={`${baseUrl}${condidat.file}`}>
-                              <h5>{condidat.name}</h5>
-                            </a>
                             <span className="font-xs" style={{ color: '#a56de2' }}>{condidat.titrePoste}</span>
+                            </a>
+                           
                             <div className="rate-reviews-small pt-3">
                               <span className="font-xs color-text-mutted">{condidat.email}</span>
                             </div>
@@ -305,6 +238,7 @@ const baseUrl = process.env.REACT_APP_API;
                               <span className="font-xs color-text-paragraph-2">{condidat.lettre_de_motivation}</span>
                             </div>
                           </div>
+                        </div>
                         </div>
                         <div className="card-block-info">
                           <div className="card-2-bottom">
@@ -320,6 +254,7 @@ const baseUrl = process.env.REACT_APP_API;
                         </div>
                       </div>
                     </div>
+                   
                   ))}
                 </div>
               )}
@@ -327,7 +262,7 @@ const baseUrl = process.env.REACT_APP_API;
           </div>
         </div>
       </div>
-    <Footer></Footer>
+   
     </div>
   </main>
     </>
