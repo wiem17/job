@@ -1,246 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { getAcceptedCondidats } from '../Services/CondidatService';
+const baseUrl = process.env.REACT_APP_API;
 
 export default function Listcondidataccepté() {
+  const [condidats, setCondidats] = useState([]);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const condidatData = await getAcceptedCondidats();
+        console.log("Postes Data:", condidatData);
+        setCondidats(condidatData);
+      } catch (error) {
+        console.error("Error fetching postes:", error);
+      }
+    };
+   
+  
+    fetchData();
+  }, []);
+  
   return (
     <>
-      <div className="col-xxl-4 col-xl-5 col-lg-5">
-          <div className="section-box">
-            <div className="container">
-              <div className="panel-white">
-                <div className="panel-head">
-                  <h5>Top Candidates</h5>
-                  <a
-                    className="menudrop"
-                    id="dropdownMenu4"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    data-bs-display="static"
-                  />
-                  <ul
-                    className="dropdown-menu dropdown-menu-light dropdown-menu-end"
-                    aria-labelledby="dropdownMenu4"
-                  >
-                    <li>
-                      <a className="dropdown-item active" href="#">
-                        Add new
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        Actions
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="panel-body">
-                  <div className="card-style-3 hover-up">
-                    <div className="card-image online">
-                      <img
-                        src="assets/imgs/page/dashboard/avata1.png"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="card-title">
-                      <h6>Robert Fox</h6>
-                      <span className="job-position">UI/UX Designer</span>
-                    </div>
-                    <div className="card-location">
-                      {" "}
-                      <span className="location">Chicago, US</span>
-                    </div>
-                    <div className="card-rating">
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <span className="font-xs color-text-mutted">(65)</span>
-                    </div>
-                  </div>
-                  <div className="card-style-3 hover-up">
-                    <div className="card-image online">
-                      <img
-                        src="assets/imgs/page/dashboard/avata2.png"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="card-title">
-                      <h6>Cody Fisher</h6>
-                      <span className="job-position">Network Engineer</span>
-                    </div>
-                    <div className="card-location">
-                      {" "}
-                      <span className="location">New York, US</span>
-                    </div>
-                    <div className="card-rating">
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <span className="font-xs color-text-mutted">(65)</span>
-                    </div>
-                  </div>
-                  <div className="card-style-3 hover-up">
-                    <div className="card-image online">
-                      <img
-                        src="assets/imgs/page/dashboard/avata3.png"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="card-title">
-                      <h6>Jane Cooper</h6>
-                      <span className="job-position">Content Manager</span>
-                    </div>
-                    <div className="card-location">
-                      {" "}
-                      <span className="location">Chicago, US</span>
-                    </div>
-                    <div className="card-rating">
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <span className="font-xs color-text-mutted">(65)</span>
-                    </div>
-                  </div>
-                  <div className="card-style-3 hover-up">
-                    <div className="card-image online">
-                      <img
-                        src="assets/imgs/page/dashboard/avata4.png"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="card-title">
-                      <h6>Jerome Bell</h6>
-                      <span className="job-position">Frontend Developer</span>
-                    </div>
-                    <div className="card-location">
-                      {" "}
-                      <span className="location">Chicago, US</span>
-                    </div>
-                    <div className="card-rating">
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <span className="font-xs color-text-mutted">(65)</span>
-                    </div>
-                  </div>
-                  <div className="card-style-3 hover-up">
-                    <div className="card-image online">
-                      <img
-                        src="assets/imgs/page/dashboard/avata5.png"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="card-title">
-                      <h6>Floyd Miles</h6>
-                      <span className="job-position">NodeJS Dev</span>
-                    </div>
-                    <div className="card-location">
-                      {" "}
-                      <span className="location">Chicago, US</span>
-                    </div>
-                    <div className="card-rating">
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <img
-                        src="assets/imgs/page/dashboard/star.svg"
-                        alt="jobBox"
-                      />{" "}
-                      <span className="font-xs color-text-mutted">(65)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        
-         
-        </div>
-    </>
+   <>
+  {condidats.map((condidat) => (
+    <div className="card-style-3 hover-up" key={condidat._id}>
+      <div className="card-image online">
+      {condidat.userID.image ? (
+                                     <img
+                                     src={baseUrl + condidat.userID.image}
+                                        alt="User Image"
+     
+                                           />
+                                                 ) : (
+                                                 <img
+                                        src="/assets/imgs/avatar/ava_1.png" // Spécifiez le chemin vers votre image par défaut
+                                      alt="Image par défaut"
+     
+                                                />
+                                      )}
+      </div>
+      <div className="card-title">
+        <h6>{condidat.userID.name} {condidat.userID.lastname}</h6>
+        <span className="job-position">{condidat.titrePoste}</span>
+      </div>
+      <div className="card-location">
+        <span >{condidat.email}</span>
+      </div>
+    </div>
+  ))}
+</>
+
+     </>
   )
 }

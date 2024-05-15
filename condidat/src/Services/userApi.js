@@ -52,3 +52,15 @@ export async function updateUserImage(file) {
     console.log(error);
   }
 }
+export async function deleteUserAndCondidatById(userId) {
+  try {
+    // Supprimer l'utilisateur
+    await axios.delete(`${baseUrl}api/users/user/${userId}`, config);
+
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error while deleting user and associated condidat:", error);
+    throw error;
+  }
+}

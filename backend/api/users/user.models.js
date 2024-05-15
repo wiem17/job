@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -43,7 +42,12 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
-   
+    notifications: [{
+      notificationId: String,
+      message: String,
+      type: String,
+      read: Boolean
+    }]
 
 
 

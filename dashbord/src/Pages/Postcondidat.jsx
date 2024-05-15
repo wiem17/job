@@ -133,13 +133,7 @@ const baseUrl = process.env.REACT_APP_API;
         </div>
        
        
-        <div className="job-count" >
-        <a className="btn btn-grey-big">
-            <span>67</span>
-            <span> Jobs Open </span>
-          </a>
-         
-        </div>
+       
       </div>
     </div>
   </div>
@@ -197,7 +191,7 @@ const baseUrl = process.env.REACT_APP_API;
                               
                           <div className="card-profile pt-10">
                             <a href={`${baseUrl}${condidat.file}`}>
-                            <span className="font-xs" style={{ color: '#a56de2' }}>{condidat.titrePoste}</span>
+                            <span className="font-xs" style={{ color: '#a56de2' }}>{condidat.userID.name} {condidat.userID.lastname}</span>
                             </a>
                            
                             <div className="rate-reviews-small pt-3">
@@ -212,8 +206,8 @@ const baseUrl = process.env.REACT_APP_API;
                         <div className="card-block-info">
                           <div className="card-2-bottom">
                             <div className="d-flex justify-content-between align-items-center px-3">
-                              <div className="btn btn-sm btn-apply-now float-start"  onClick={() => handleAccept(condidat._id)}>Accept</div>
-                              <div><div className="btn btn-sm btn-apply-now float-end" onClick={()=>handleDelete(condidat._id)}>Delete</div></div>
+                              <div className="btn btn-sm btn-apply-now float-start"  onClick={() => handleAccept(condidat._id)}>Accepter</div>
+                              <div><div className="btn btn-sm btn-apply-now float-end" onClick={()=>handleDelete(condidat._id)}>Refuser</div></div>
                             </div>
                           </div>
                         </div>

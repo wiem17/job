@@ -367,7 +367,7 @@ const CandidatAccept = () => {
                                             handleDelete(condidat._id)
                                           }
                                         >
-                                          Delete
+                                          Refuser
                                         </div>
                                       </div>
                                       <div>

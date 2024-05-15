@@ -1,18 +1,27 @@
 const CondidatSchema = require("../condidates/condidat.models");
 const PosteSchema = require("../postes/poste.models");
+const UserSchema = require("../users/user.models");
+const moment = require("moment");
 require("dotenv").config();
-
+const { v4: uuidv4 } = require("uuid");
 // Créer un nouveau condidat
 exports.createCondidat = async (req, res, next) => {
-  const { userID, titrePoste ,email,lettre_de_motivation} = req.body;
+  const { userID, titrePoste, email, lettre_de_motivation } = req.body;
   const { file } = req; // Extract file from request
-
+  const notificationId = uuidv4();
+  const message = "Un nouveau candidat a été ajouté."; // Définir le message correctement
+  const read = true;
   try {
     // Vérifier si l'utilisateur a déjà postulé au poste spécifique
-    const existingCondidat = await CondidatSchema.findOne({ userID, titrePoste });
+    const existingCondidat = await CondidatSchema.findOne({
+      userID,
+      titrePoste,
+    });
 
     if (existingCondidat) {
-      return res.status(400).json({ success: false, error: "Vous avez déjà postulé à ce poste" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Vous avez déjà postulé à ce poste" });
     }
 
     // Si l'utilisateur n'a pas déjà postulé au poste spécifique, ajouter la candidature
@@ -26,10 +35,41 @@ exports.createCondidat = async (req, res, next) => {
 
     const saved = await newCondidat.save();
 
+    if (newCondidat) {
+      // Trouver l'utilisateur admin pour ajouter une notification
+      const adminUser = await UserSchema.findOne({ role: "ADMIN" });
+      console.log(adminUser.notifications)
+      let notification = [...adminUser.notifications];
+      
+      notification.push({
+        notificationId: notificationId,
+        message: message,
+        read: read,
+      });
+      // Vérifier si l'utilisateur admin existe
+      const user = await UserSchema.findOneAndUpdate(
+        { role: "ADMIN" }, // Rechercher l'utilisateur par son rôle
+        {
+          $set: {
+            notifications: notification, // Mettre à jour le champ read dans le tableau notifications à l'index 0
+          },
+        },
+        { new: true }
+      );
+      if (!user) {
+        return res
+          .status(404)
+          .json({ error: `Aucun utilisateur avec le rôle ${role} trouvé` });
+      }
+      res.json(user);
+    }
+
     return res.status(201).json({ success: true, information: saved });
   } catch (error) {
     console.error("Erreur lors de l'ajout du candidat:", error);
-    return res.status(500).json({ success: false, error: "Erreur lors de l'ajout du candidat" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Erreur lors de l'ajout du candidat" });
   }
 };
 // Obtenir tous les condidats
@@ -92,7 +132,9 @@ exports.deleteCondidatById = async (req, res, next) => {
 exports.getAcceptedCondidats = async (req, res, next) => {
   try {
     // Récupérer tous les condidats acceptés depuis la base de données
-    const acceptedCondidats = await CondidatSchema.find({ accepted: true });
+    const acceptedCondidats = await CondidatSchema.find({
+      accepted: true,
+    }).populate("userID", "name lastname email image");
     res.json(acceptedCondidats);
   } catch (error) {
     console.error("Error fetching accepted condidats:", error);
@@ -173,7 +215,7 @@ exports.getAcceptedCondidatsByPosteTitle = async (req, res, next) => {
     const acceptedCondidats = await CondidatSchema.find({
       titrePoste: titre,
       accepted: true,
-    }).populate("userID", "name email image");
+    }).populate("userID", "name  lastname email image");
 
     // Si aucun candidat accepté n'est trouvé pour ce titre de poste
     if (acceptedCondidats.length === 0) {
@@ -204,14 +246,14 @@ exports.getNonAcceptedCondidatsByPosteTitle = async (req, res, next) => {
     const nonAcceptedCondidats = await CondidatSchema.find({
       titrePoste: titre,
       accepted: "en attente",
-    }).populate("userID", "name email image"); // Populate the userID field with user information
+    }).populate("userID", "name lastname email image"); // Populate the userID field with user information
     console.log("Résultats de la recherche:", nonAcceptedCondidats);
 
     // Si aucun candidat non accepté n'est trouvé pour ce titre de poste
     if (nonAcceptedCondidats.length === 0) {
       return res.status(404).json({
         success: false,
-        
+
         message:
           "Aucun candidat non accepté trouvé pour le titre de poste spécifié",
       });
@@ -233,7 +275,9 @@ exports.getNonAcceptedCondidatsByPosteTitle = async (req, res, next) => {
 };
 exports.countAcceptedCondidates = async (req, res) => {
   try {
-    const totalAcceptedCondidates = await CondidatSchema.countDocuments({ accepted: true });
+    const totalAcceptedCondidates = await CondidatSchema.countDocuments({
+      accepted: true,
+    });
     res.status(200).json({ count: totalAcceptedCondidates });
   } catch (err) {
     res.status(500).json({ error: "Erreur interne du serveur" });
@@ -243,9 +287,91 @@ exports.countAcceptedCondidates = async (req, res) => {
 // Méthode pour obtenir le nombre total de candidats refusés
 exports.countRefusedCondidates = async (req, res) => {
   try {
-    const totalRefusedCondidates = await CondidatSchema.countDocuments({ accepted: false });
+    const totalRefusedCondidates = await CondidatSchema.countDocuments({
+      accepted: false,
+    });
     res.status(200).json({ count: totalRefusedCondidates });
   } catch (err) {
     res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+};
+
+exports.getLatestCondidats = async (req, res) => {
+  try {
+    // Récupérer la date d'aujourd'hui
+    const today = moment().startOf("day");
+    console.log("Date d'aujourd'hui :", today);
+
+    // Rechercher les candidats créés aujourd'hui
+    const latestCondidats = await CondidatSchema.find({
+      datePublication: {
+        $gte: today.toDate(),
+        $lt: moment(today).endOf("day").toDate(),
+      },
+    });
+    console.log("Candidats créés aujourd'hui :", latestCondidats);
+
+    res.status(200).json(latestCondidats);
+  } catch (err) {
+    console.error("Erreur lors de la recherche des candidats :", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+exports.getPercentagePostesAdded = async (req, res) => {
+  try {
+    const totalPostes = await PosteSchema.countDocuments();
+
+    // Calculer le pourcentage de postes ajoutés
+    const percentagePostesAdded = (totalPostes / totalPostes) * 100;
+
+    res.status(200).json({ percentagePostesAdded });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+exports.getPercentageCondidatsApplied = async (req, res) => {
+  try {
+    const totalCondidats = await CondidatSchema.countDocuments();
+    const maximumCondidats = 500; // Nombre maximum de candidats
+
+    // Calculer le pourcentage du nombre total de candidats par rapport au nombre maximum de candidats
+    const percentageCondidatsApplied =
+      (totalCondidats / maximumCondidats) * 100;
+
+    res.status(200).json({ percentageCondidatsApplied });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+exports.getPercentageCondidatsAccepted = async (req, res) => {
+  try {
+    const totalCondidats = await CondidatSchema.countDocuments();
+    const totalCondidatsAccepted = await CondidatSchema.countDocuments({
+      accepted: true,
+    });
+
+    // Calcul du pourcentage de candidats acceptés
+    const percentageCondidatsAccepted =
+      (totalCondidatsAccepted / totalCondidats) * 100;
+
+    res.status(200).json({ percentageCondidatsAccepted });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+exports.getPercentageCondidatsnonAccepted = async (req, res) => {
+  try {
+    const totalCondidats = await CondidatSchema.countDocuments();
+    const totalCondidatsnonAccepted = await CondidatSchema.countDocuments({
+      accepted: false,
+    });
+
+    // Calcul du pourcentage de candidats acceptés
+    const percentageCondidatsnonAccepted =
+      (totalCondidatsnonAccepted / totalCondidats) * 100;
+
+    res.status(200).json({ percentageCondidatsnonAccepted });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

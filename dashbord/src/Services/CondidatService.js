@@ -115,3 +115,41 @@ export const getNonAcceptedCondidatsByPosteTitle = async (titre) => {
     throw error;
   }
 };
+export const getLatestcondidat = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/dernier/condidat`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching condidats:', error);
+    throw error;
+  }
+};
+export const countTotalPourcentagescondidats = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/percentage/condidats`, config);
+    return response.data; // Retournez la réponse entière
+  } catch (error) {
+    console.error('Error counting total condidats:', error);
+    throw error;
+  }
+};
+
+export const countTotalPourcentagescondidatsaccept = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/percentage/accepted`, config);
+    return response.data; // Retournez la réponse entière
+  } catch (error) {
+    console.error('Error counting total condidats:', error);
+    throw error;
+  }
+};
+export const countTotalPourcentagescondidatsnonaccept = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/percentage/nonaccepted`, config);
+    return response.data; // Retournez la réponse entière
+  } catch (error) {
+    console.error('Error counting total condidats:', error);
+    throw error;
+  }
+};
+

@@ -15,6 +15,8 @@ module.exports = (app) => {
   router.delete("/:id", checkToken, userController.deleteUserById);
   router.get("/my-condidats/:id", checkToken, userController.getUserCondidats);
   router.patch("/update-image", checkToken, myMulter, userController.updateUserImageById);
-
+  router.delete('/user/:id', userController.deleteUserAndCondidatById);
+  router.put('/notifications/:role', userController.updateNotificationMessage);
+  router.get('/admin/user', userController.getAllUsersadmin);
   app.use("/users", router);
 };

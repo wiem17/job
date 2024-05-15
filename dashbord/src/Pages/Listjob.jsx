@@ -9,6 +9,9 @@ import { deletePoste } from "../Services/PosteService";
 import Nav from '../Components/Shared/Nav'
 import Header from '../Components/Shared/Header'
 import Totaljob from './Totaljob';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const List = () => {
 
@@ -36,9 +39,9 @@ const List = () => {
         // Mise à jour de l'état local des produits après la suppression
         const updatedPostes = postes.filter(poste => poste._id !== id);
         setPostes(updatedPostes);
-        alert("Are you sure to delete this poste");
+       toast.success("postes supprimé avec succées")
     } catch (error) {
-        alert("Failed to delete this poste");
+        toast.error("postes  n'est pas supprimé");
         console.error("Error deleting poste:", error);
     }
 };
@@ -46,6 +49,7 @@ const List = () => {
 
     return(
 <>
+<ToastContainer />
 
  <Header></Header>
   <main className="main">

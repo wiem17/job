@@ -47,9 +47,9 @@ const baseUrl = process.env.REACT_APP_API;
             console.log("function endeed");
       
             // Successfully sent
-            toast.success("Email sent successfully!");
+            toast.success("Email envoyée avec succées!");
           } catch (error) {
-            console.error("Error sending email:", error);
+            console.error("erreur lors de l'envois l'email:", error);
             // Display error notification
             toast.error("An error occurred while sending the email.");
           }
@@ -165,13 +165,7 @@ const baseUrl = process.env.REACT_APP_API;
         </div>
        
        
-        <div className="job-count" >
-        <a className="btn btn-grey-big">
-            <span>67</span>
-            <span> Jobs Open </span>
-          </a>
-         
-        </div>
+       
       </div>
     </div>
   </div>
@@ -228,7 +222,7 @@ const baseUrl = process.env.REACT_APP_API;
                                </figure>
                           <div className="card-profile pt-10">
                             <a href={`${baseUrl}${condidat.file}`}>
-                            <span className="font-xs" style={{ color: '#a56de2' }}>{condidat.titrePoste}</span>
+                            <span className="font-xs" style={{ color: '#a56de2' }}>{condidat.userID.name} {condidat.userID.lastname}</span>
                             </a>
                            
                             <div className="rate-reviews-small pt-3">
@@ -245,10 +239,10 @@ const baseUrl = process.env.REACT_APP_API;
                             <div className="d-flex justify-content-between align-items-center px-3">
                               <div className="btn btn-sm btn-apply-now float-start"  onClick={() =>
                                             handleAccepted(condidat)
-                                          }>Accept</div>
+                                          }>Accepter</div>
                               <div><div className="btn btn-sm btn-apply-now float-end"  onClick={() =>
                                             handleDelete(condidat._id)
-                                          }>Delete</div></div>
+                                          }>Refuser</div></div>
                             </div>
                           </div>
                         </div>

@@ -23,6 +23,11 @@ const condidatSchema = new mongoose.Schema({
     type: String,
     required: [true, "Titre du poste is required"],
   },
+
+  datePublication: {
+    type: Date, // Définissez le type comme Date pour stocker la date et l'heure
+    default: Date.now, // Définissez une valeur par défaut pour enregistrer la date actuelle lors de la création
+  },
 });
 const CondidatSchema = mongoose.model("condidats", condidatSchema);
 

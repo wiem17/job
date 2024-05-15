@@ -7,7 +7,10 @@ import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import Nav from '../Components/Shared/Nav'
-
+import Header from '../Components/Shared/Header'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const baseUrl = process.env.REACT_APP_API;
 
 const PosteList = () => {
@@ -71,16 +74,17 @@ const PosteList = () => {
       !newPoste.categories ||
       newPoste.image.length === 0
     ) {
-      return alert("Please fill out all the fields");
+      return toast.error("Veuillez remplir tous les champs")
     }
 
     try {
       // Appeler la fonction pour créer un produit
       const response = await createPoste(newPoste);
-      navigate("/dashbord");
-
+      toast.success("Poste ajouté avec succès!");
+         navigate("/postlist")
       // Vérifiez si la création du produit a réussi (vous pouvez ajuster cette vérification selon la structure de votre réponse)
       if (response.data && response.data.length === 0) {
+      
         // Réinitialiser le formulaire après la création du produit
         setNewPoste({
             titre: "",
@@ -90,12 +94,12 @@ const PosteList = () => {
             image: [], 
         });
 
-        // Afficher un message de succès
-        setShowSuccessMessage(true);
+       
       }
 
     } catch (error) {
       console.error("Error creating product:", error);
+      toast.erreur("Poste n'est pas ajouté !");
       // Gérer les erreurs si nécessaire
     }
   };
@@ -147,140 +151,15 @@ const PosteList = () => {
 
   return (
 <>
+<ToastContainer />
 
-  <header className="header sticky-bar">
-    <div className="container">
-      <div className="main-header">
-        <div className="header-left">
-          <div className="header-logo">
-            <a className="d-flex" href="index.html">
-              <img alt="jobBox" src="assets/imgs/page/dashboard/logo.svg" />
-            </a>
-          </div>
-          <span className="btn btn-grey-small ml-10">Admin area</span>
-        </div>
-        <div className="header-search">
-          <div className="box-search">
-            <form action="">
-              <input
-                className="form-control input-search"
-                type="text"
-                name="keyword"
-                placeholder="Search"
-              />
-            </form>
-          </div>
-        </div>
-        <div className="header-menu d-none d-md-block">
-          <ul>
-            <li>
-              {" "}
-              <a href="http://wp.alithemes.com/html/jobbox/demos/index.html">
-                Home{" "}
-              </a>
-            </li>
-            <li>
-              {" "}
-              <a href="http://wp.alithemes.com/html/jobbox/demos/page-about.html">
-                About us{" "}
-              </a>
-            </li>
-            <li>
-              {" "}
-              <a href="http://wp.alithemes.com/html/jobbox/demos/page-contact.html">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="header-right">
-          <div className="block-signin">
-            <a
-              className="btn btn-default icon-edit hover-up"
-              href="post-job.html"
-            >
-              Post Job
-            </a>
-            <div className="dropdown d-inline-block">
-              <a
-                className="btn btn-notify"
-                id="dropdownNotify"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                data-bs-display="static"
-              />
-              <ul
-                className="dropdown-menu dropdown-menu-light dropdown-menu-end"
-                aria-labelledby="dropdownNotify"
-              >
-                <li>
-                  <a className="dropdown-item active" href="#">
-                    10 notifications
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    12 messages
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    20 replies
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="member-login">
-              <img alt="" src="assets/imgs/page/dashboard/profile.png" />
-              <div className="info-member">
-                {" "}
-                <strong className="color-brand-1">Steven Jobs</strong>
-                <div className="dropdown">
-                  <a
-                    className="font-xs color-text-paragraph-2 icon-down"
-                    id="dropdownProfile"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    data-bs-display="static"
-                  >
-                    Super Admin
-                  </a>
-                  <ul
-                    className="dropdown-menu dropdown-menu-light dropdown-menu-end"
-                    aria-labelledby="dropdownProfile"
-                  >
-                    <li>
-                      <a className="dropdown-item" href="profile.html">
-                        Profiles
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="my-resume.html">
-                        CV Manager
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="login.html">
-                        Logout
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+ <Header></Header>
   <main className="main">
    <Nav></Nav>
     <div className="box-content">
       <div className="box-heading">
         <div className="box-title">
-          <h3 className="mb-35">Post a Job</h3>
+          <h3 className="mb-35">Ajouter Poste</h3>
         </div>
         <div className="box-breadcrumb">
           <div className="breadcrumbs">
@@ -292,7 +171,7 @@ const PosteList = () => {
                 </a>
               </li>
               <li>
-                <span>Post New Job</span>
+                <span>AjouterPoste</span>
               </li>
             </ul>
           </div>
@@ -304,7 +183,7 @@ const PosteList = () => {
             <div className="container">
               <div className="panel-white mb-30">
                 <div className="box-padding bg-postjob">
-                  <h5 className="icon-edu">Tell us about your role</h5>
+                  <h5 className="icon-edu">Ajouter ici</h5>
                   <div className="row mt-30">
                     <div className="col-lg-9">
                     <div className="row">
@@ -422,135 +301,8 @@ const PosteList = () => {
           </div>
         </div>
       </div>
-      <div className="mt-10">
-        <div className="section-box">
-          <div className="container">
-            <div className="panel-white pt-30 pb-30 pl-15 pr-15">
-              <div className="box-swiper">
-                <div className="swiper-container swiper-group-10">
-                  <div className="swiper-wrapper">
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/microsoft.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/sony.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/acer.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/nokia.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/asus.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/casio.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/dell.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/panasonic.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/vaio.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                    <div className="swiper-slide">
-                      {" "}
-                      <img
-                        src="assets/imgs/page/dashboard/sony.svg"
-                        alt="jobBox"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer className="footer mt-20">
-        <div className="container">
-          <div className="box-footer">
-            <div className="row">
-              <div className="col-md-6 col-sm-12 mb-25 text-center text-md-start">
-                <p className="font-sm color-text-paragraph-2">
-                  © 2022 -{" "}
-                  <a
-                    className="color-brand-2"
-                    href="https://themeforest.net/item/jobbox-job-portal-html-bootstrap-5-template/39217891"
-                    target="_blank"
-                  >
-                    JobBox{" "}
-                  </a>
-                  Dashboard <span> Made by</span>
-                  <a
-                    className="color-brand-2"
-                    href="http://alithemes.com"
-                    target="_blank"
-                  >
-                    {" "}
-                    AliThemes
-                  </a>
-                </p>
-              </div>
-              <div className="col-md-6 col-sm-12 text-center text-md-end mb-25">
-                <ul className="menu-footer">
-                  <li>
-                    <a href="#">About</a>
-                  </li>
-                  <li>
-                    <a href="#">Careers</a>
-                  </li>
-                  <li>
-                    <a href="#">Policy</a>
-                  </li>
-                  <li>
-                    <a href="#">Contact</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
+     
     </div>
   </main>
 </>

@@ -7,18 +7,19 @@ import {
   updateUserImage,
   updateUserById,
   fetchCondidatsByUserId,
+  deleteUserAndCondidatById
 } from "../Services/userApi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useUser } from "../auth/useUser";
 import moment from "moment";
-
+import { useNavigate } from "react-router-dom";
 const baseUrl = process.env.REACT_APP_API;
 
 function Main() {
   const user = useUser();
-
+  const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [userData, setUserData] = useState(null);
   const [condidats, setCondidats] = useState([]);
@@ -116,6 +117,20 @@ function Main() {
     fileInputRef.current.click();
   };
 
+  const handleDeleteuser = async (id) => {
+    try {
+        // Appel de la fonction deleteProduct de votre service pour supprimer le produit
+        await deleteUserAndCondidatById(id);
+        // Mise à jour de l'état local des produits après la suppression
+       
+       toast.success("compte supprimé avec succées")
+       navigate("/")
+    } catch (error) {
+        toast.error("compte  n'est pas supprimé");
+        console.error("Error deleting compte:", error);
+    }
+};
+
   return (
     <>
       <ToastContainer />
@@ -169,7 +184,7 @@ function Main() {
                     </ul>
                     <div className="border-bottom pt-10 pb-10" />
                     <div className="mt-20 mb-20">
-                      <a className="link-red" href="#">
+                      <a className="link-red" onClick={()=>handleDeleteuser(user._id)}>
                         Supprimer Mon Compte
                       </a>
                     </div>

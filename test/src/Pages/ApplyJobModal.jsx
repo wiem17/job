@@ -41,12 +41,14 @@ function Post({ onClick }) {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("titreFromPost") && postes.length > 0) {
+    if (localStorage.getItem("titreFromPost")) {
       const poste = postes.find((poste) => {
         return poste.titre === localStorage.getItem("titreFromPost");
       });
       console.log("titre de poste :", postes.length > 0);
-     
+      handleClick(localStorage.getItem("titreFromPost"));
+
+      localStorage.removeItem("titreFromPost");
     }
   }, [postes]);
   useEffect(() => {
@@ -105,6 +107,7 @@ function Post({ onClick }) {
                 {posteSearch.length === 0 ? (
                   <div>
                     <h1>No product to show</h1>
+
                   </div>
                 ) : (
                   <Container>
@@ -160,9 +163,8 @@ function Post({ onClick }) {
                                       {isLogedIn ? (
                                         <div
                                           className="btn btn-apply-now"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#ModalApplyJobForm"
-                                          onClick={() =>handleClick(poste.titre)
+
+                                          onClick={() => handleClick(poste.titre)
                                           }
                                         >
                                           Postulez maintenant

@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { getLatestcondidat  } from "../../Services/CondidatService"; 
 import { Link } from 'react-router-dom';
 import Image from './Image';
-
+const baseUrl = process.env.REACT_APP_API;
 function Header() {
+  const [condidats, setCondidat] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Utilisez la fonction getAllProducts pour obtenir la liste des produits
+        const condidatData = await getLatestcondidat(); // Ajoutez await ici
+       
+        setCondidat(condidatData);
+      } catch (error) {
+        console.error("Error fetching condidat:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
   return (
     <header className="header sticky-bar">
     <div className="container">
@@ -23,33 +39,32 @@ function Header() {
               
               <Link to="/post"   className="btn btn-default icon-edit hover-up"> Poster une offre </Link>
             <div className="dropdown d-inline-block">
-              <a
+              { 
+                condidats.lenght >=1 ?  <a
                 className="btn btn-notify"
                 id="dropdownNotify"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
                 data-bs-display="static"
-              />
+              />:
+              <i class="fa-regular fa-bell"></i>
+              }
               <ul
                 className="dropdown-menu dropdown-menu-light dropdown-menu-end"
                 aria-labelledby="dropdownNotify"
               >
-                <li>
-                  <a className="dropdown-item active" href="#">
-                    10 notifications
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    12 messages
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    20 réponses
-                  </a>
-                </li>
+                 
+                
+                 
+                  {condidats.map((condidat) => (
+                    <div className="dropdown-item" key={condidat._id}>
+                            {condidat.email}:
+                            {condidat.titrePoste}
+                    </div>
+                   
+                  ))}
+                 
               </ul>
             </div>
           <Image></Image>

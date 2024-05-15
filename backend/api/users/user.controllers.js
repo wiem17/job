@@ -1,6 +1,7 @@
 const UserSchema = require("../users/user.models");
 const CondidatSchema = require("../condidates/condidat.models");
 const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require('uuid');
 require("dotenv").config();
 
 exports.getAllUsers = async (req, res) => {
@@ -126,5 +127,68 @@ exports.updateUserImageById = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error updating user image." });
+  }
+};
+exports.deleteUserAndCondidatById = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    // Supprimer le candidat associé à l'utilisateur
+    await CondidatSchema.findOneAndDelete({ userID: id });
+
+    // Supprimer l'utilisateur lui-même
+    const deletedUser = await UserSchema.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ error: "Utilisateur non trouvé." });
+    }
+
+    res.json({ message: "Utilisateur et candidat associé supprimés avec succès." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de la suppression de l'utilisateur et du candidat associé." });
+  }
+};
+exports.updateNotificationMessage = async (req, res) => {
+  try 
+  {
+    const { role } = req.params;
+    const { message, read } = req.body;
+    const notificationId = uuidv4();
+
+    // Trouver l'utilisateur en fonction du rôle
+    const user = await UserSchema.findOneAndUpdate(
+      { role: role }, // Rechercher l'utilisateur par son rôle
+      { 
+        $set: { 
+          "notifications.0.notificationId": notificationId,
+          "notifications.0.message": message,
+          "notifications.0.read": read // Mettre à jour le champ read dans le tableau notifications à l'index 0
+        } 
+      }, 
+      { new: true }
+    );
+
+    // Vérifier si l'utilisateur existe
+    if (!user) {
+      return res.status(404).json({ error: `Aucun utilisateur avec le rôle ${role} trouvé` });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de la notification :", error);
+    res.status(500).json({ error: "Erreur lors de la mise à jour de la notification" });
+  }
+};
+
+exports.getAllUsersadmin = async (req, res) => {
+  try {
+    // Trouver tous les utilisateurs avec le rôle "admin"
+    const users = await UserSchema.find({ role: 'ADMIN' });
+
+    res.send(users);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des utilisateurs :", error);
+    res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs" });
   }
 };

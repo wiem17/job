@@ -31,7 +31,7 @@ router.get('/dernier/job' , posteController.getLatestPostes);
 router.get('/count/poste' ,checkToken, posteController.countTotalPostes);
 
 router.delete("/:public_id" ,checkToken, posteController.deleteImage);
-  
+router.get('/percentage/PostesAdded', checkToken,posteController.getPercentagePostesAdded);
     app.use("/postes", router);
   };
   

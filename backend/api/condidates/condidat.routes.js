@@ -40,5 +40,9 @@ module.exports = (app) => {
   );
   router.get('/count/accepted', condidatController.countAcceptedCondidates);
 router.get('/count/refused', condidatController.countRefusedCondidates);
+router.get('/dernier/condidat' , condidatController.getLatestCondidats);
+router.get('/percentage/condidats',  checkToken,condidatController.getPercentageCondidatsApplied);
+router.get('/percentage/accepted', checkToken, condidatController.getPercentageCondidatsAccepted);
+router.get('/percentage/nonaccepted', checkToken, condidatController.getPercentageCondidatsnonAccepted);
   app.use("/condidates", router);
 };

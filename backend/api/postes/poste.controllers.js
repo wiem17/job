@@ -132,3 +132,16 @@ exports.deleteImage = async (req, res) => {
       res.status(500).send(e.message);
   }
 };
+exports.getPercentagePostesAdded = async (req, res) => {
+  try {
+    const totalPostes = await PosteSchema.countDocuments();
+    const maximumPostes = 1000; // Nombre maximum de postes
+
+    // Calculer le pourcentage du nombre total de postes par rapport au nombre maximum de postes
+    const percentagePostesAdded = (totalPostes / maximumPostes) * 100;
+
+    res.status(200).json({ percentagePostesAdded });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

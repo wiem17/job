@@ -92,6 +92,15 @@ export const countTotalPostes = async () => {
 };
 
 
+export const countTotalPourcentagesPostes = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}api/postes/percentage/PostesAdded` ,config);
+    return response.data;
+  } catch (error) {
+    console.error('Error counting total postes:', error);
+    throw error; // Remarque : Vous pouvez gérer les erreurs comme vous le souhaitez
+  }
+};
 
 
 
