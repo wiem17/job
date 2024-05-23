@@ -19,12 +19,12 @@ function Login() {
           if (decoded.role === "ADMIN") {
             localStorage.setItem("token", token);
             localStorage.setItem("isLogedIn", true);
-          
-          
-              navigate("/admin-dashboard");
-          
+            setTimeout(() => {
+              window.location.reload(false);
+              //navigate("/");
+            }, 1000);
           } else {
-            alert("compte condidat requis");
+            alert("compte admin requis");
           }
         })
         .catch(() => {

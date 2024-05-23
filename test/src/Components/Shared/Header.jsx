@@ -11,7 +11,8 @@ function Header() {
     setisLogedIn(false);
     localStorage.removeItem("userID");
     localStorage.removeItem("isLogedIn");
-    navigate("/");
+    localStorage.removeItem("token");
+    window.location.reload() ; 
   };
 
   useEffect(() => {
@@ -27,7 +28,7 @@ function Header() {
           <div className="header-left">
             <div className="header-logo">
               <a className="d-flex" href="index.html">
-                <img alt="jobBox" src="assets/imgs/template/jobhub-logo.svg" />
+                <img style={{height:"40px"}} alt="jobBox" src="assets/imgs/template/cat.png" />
               </a>
             </div>
           </div>
@@ -45,30 +46,18 @@ function Header() {
                 <li className="has-children">
                   <a >Pages</a>
                   <ul className="sub-menu">
+                   
                     <li>
-                      <a >About Us</a>
-                    </li>
-                    <li>
-                      <a >Pricing Plan</a>
-                    </li>
-                    <li>
-                      <a >Contact Us</a>
+                    <Link to="/regiter"> Inscription </Link>
                     </li>
 
                     <li>
                       <Link to="/login"> Connexion </Link>
                     </li>
                     <li>
-                      <a >Reset Password</a>
+                    <Link to="/forget"> Oublié mot de passe </Link>
                     </li>
-                    <li>
-                      <a href="page-content-protected.html">
-                        Content Protected
-                      </a>
-                    </li>
-                    <li>
-                      <a href="page-404.html">404 Error</a>
-                    </li>
+                   
                   </ul>
                 </li>
                

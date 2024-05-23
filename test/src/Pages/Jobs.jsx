@@ -44,7 +44,8 @@ function Post() {
       !condidat.titrePoste ||
       !condidat.file
     ) {
-      return alert("Please fill out all the fields");
+      toast.error("Veuillez remplir tous les champs");
+
     }
 
     try {
@@ -99,7 +100,7 @@ function Post() {
       }} className="  top-0 left-0    fixed w-full h-full z-50  ">
         <div style={{ height: '100%' }} class="w-96 w-80 mx-auto max-w-96 max-w-80 rounded-lg shadow-lg p-2 bg-slate-100 z-20">
           <div className="modal-dialog modal-lg" >
-            <div style={{ backgroundColor: "white"}} className="modal-content apply-job-form">
+            <div style={{ backgroundColor: "white" , marginTop:"70px"}} className="modal-content apply-job-form">
               <button
                 className="btn-close"
                 type="button"
@@ -109,11 +110,11 @@ function Post() {
               />
               <div className="modal-body pl-30 pr-30 pt-50">
                 <div className="text-center">
-                  <p className="font-sm text-brand-2">Job Application </p>
+                 
                   <h2 className="mt-10 mb-5 text-brand-1 text-capitalize">
-                    Start your career today
+                  Commencez votre carrière dès aujourd'hui
                   </h2>
-                  <p className="font-sm text-muted mb-30">{valueFromChild}</p>
+                  <p className="font-sm text-brand-2">{valueFromChild} </p>
                 </div>
                 <form onSubmit={handleCreateProduct}>
                   <div className="form-group">
@@ -155,7 +156,7 @@ function Post() {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="cv">Upload CV *</label>
+                    <label htmlFor="cv">Télécharger le CV *</label>
                     <input
                       type="file"
                       className="form-control"
@@ -165,18 +166,7 @@ function Post() {
                       }
                     />
                   </div>
-                  <div className="login_footer form-group d-flex justify-content-between">
-                    <label className="cb-container">
-                      <input type="checkbox" />
-                      <span className="text-small">
-                        Agree our terms and policy
-                      </span>
-                      <span className="checkmark" />
-                    </label>
-                    <a className="text-muted" href="page-contact.html">
-                      Learn more
-                    </a>
-                  </div>
+                 
                   <div className="form-group">
                     <button
                       className="btn btn-default hover-up w-100"
@@ -186,10 +176,6 @@ function Post() {
                       {" "}
                       Postulez à ce poste
                     </button>
-                  </div>
-                  <div className="text-muted text-center">
-                    Do you need support?{" "}
-                    <a href="page-contact.html">Contact Us</a>
                   </div>
                 </form>
               </div>

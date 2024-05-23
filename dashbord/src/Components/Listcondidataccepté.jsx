@@ -22,7 +22,7 @@ export default function Listcondidataccepté() {
   }, []);
   
   return (
-    <>
+    
    <>
   {condidats.map((condidat) => (
     <div className="card-style-3 hover-up" key={condidat._id}>
@@ -52,6 +52,6 @@ export default function Listcondidataccepté() {
   ))}
 </>
 
-     </>
+    
   )
 }

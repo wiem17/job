@@ -88,26 +88,7 @@ const List = () => {
                           <Totaljob></Totaljob>
                         </span>
                       </div>
-                      <div className="col-xl-6 col-lg-7 text-lg-end mt-sm-15">
-                        <div className="display-flex2">
-                          
-                        
-                          <div className="box-view-type">
-                            <a className="view-type" href="my-job-list.html">
-                              <img
-                                src="assets/imgs/template/icons/icon-list.svg"
-                                alt="jobBox"
-                              />
-                            </a>
-                            <a className="view-type" href="my-job-grid.html">
-                              <img
-                                src="assets/imgs/template/icons/icon-grid-hover.svg"
-                                alt="jobBox"
-                              />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
+                     
                     </div>
                   </div>
                   <div className="row">

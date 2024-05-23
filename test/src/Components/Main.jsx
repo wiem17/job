@@ -8,7 +8,6 @@ import { Card, Badge } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { getLatestPostes } from "../Services/PosteService"; 
 import  '../Pages/Style.css';
-
 const Main = () => {
   const [postes, setPostes] = useState([]);
 
@@ -229,12 +228,13 @@ const Main = () => {
       <div className="section-box wow animate__animated animate__fadeIn">
         <div className="container">
           <div className="text-center">
-            <h2 className="section-title mb-10 wow animate__animated animate__fadeInUp">
-              Browse by category
-            </h2>
-            <p className="font-lg color-text-paragraph-2 wow animate__animated animate__fadeInUp">
-              Find the job that’s perfect for you. about 800+ new jobs everyday
-            </p>
+          <h2 className="section-title mb-10 wow animate__animated animate__fadeInUp">
+  Parcourir par catégorie
+</h2>
+<p className="font-lg color-text-paragraph-2 wow animate__animated animate__fadeInUp">
+  Trouvez le travail qui est parfait pour vous. 
+</p>
+
             <div className="box-swiper mt-50">
       <div className="swiper-container swiper-group-5 swiper">
         <div className="swiper-wrapper pb-70 pt-5">
@@ -251,7 +251,7 @@ const Main = () => {
                   </div>
                   <div className="text-info-right">
                     <h4>{category.name}</h4>
-                    <p className="font-xs">1526<span> Jobs Available</span></p>
+                    <p className="font-xs">Cliquer Ici</p>
                   </div>
                 </div>
               </LinkContainer>
@@ -266,35 +266,33 @@ const Main = () => {
         </div>
       </div>
   </section>
-    <div className="section-box mb-30">
-      <div className="container">
-        <div className="box-we-hiring">
-          <div className="text-1">
-            <span className="text-we-are">We are</span>
-            <span className="text-hiring">Hiring</span>
-          </div>
-          <div className="text-2">
-            Let’s <span className="color-brand-1">Work</span> Together
-            <br /> &amp; <span className="color-brand-1">Explore</span>{" "}
-            Opportunities
-          </div>
-          <div className="text-3">
-           
-          </div>
-        </div>
+  <div className="section-box mb-30">
+  <div className="container">
+    <div className="box-we-hiring">
+      <div className="text-1">
+        <span className="text-we-are">Nous</span>
+        <span className="text-hiring">Recrutons</span>
       </div>
+      <div className="text-2">
+        Travaillons <span className="color-brand-1">Ensemble</span>
+        <br /> et <span className="color-brand-1">Explorons</span> les Opportunités
+      </div>
+     
     </div>
+  </div>
+</div>
+
     <section className="section-box mt-50">
       <div className="container">
-        <div className="text-center">
-          <h2 className="section-title mb-10 wow animate__animated animate__fadeInUp">
-            Jobs of the day
-          </h2>
-          <p className="font-lg color-text-paragraph-2 wow animate__animated animate__fadeInUp">
-            Search and connect with the right candidates faster.{" "}
-          </p>
-        
-        </div>
+      <div className="text-center">
+  <h2 className="section-title mb-10 wow animate__animated animate__fadeInUp">
+    Offres d'emploi du jour
+  </h2>
+  <p className="font-lg color-text-paragraph-2 wow animate__animated animate__fadeInUp">
+    Recherchez et connectez-vous plus rapidement avec les bons emplois.
+  </p>
+</div>
+
         <div className="mt-70">
           <div className="tab-content" id="myTabContent-1">
             <div

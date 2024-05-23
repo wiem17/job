@@ -152,7 +152,7 @@ const PosteList = () => {
     <div className="box-content">
       <div className="box-heading">
         <div className="box-title">
-          <h3 className="mb-35">Post a Job</h3>
+          <h3 className="mb-35">Modifier Poste</h3>
         </div>
         <div className="box-breadcrumb">
           <div className="breadcrumbs">
@@ -164,7 +164,7 @@ const PosteList = () => {
                 </a>
               </li>
               <li>
-                <span>Post New Job</span>
+                <span>Modifier Poste</span>
               </li>
             </ul>
           </div>
@@ -176,7 +176,7 @@ const PosteList = () => {
             <div className="container">
               <div className="panel-white mb-30">
                 <div className="box-padding bg-postjob">
-                  <h5 className="icon-edu">Tell us about your role</h5>
+                  <h5 className="icon-edu">Ajouter ici</h5>
                   <div className="row mt-30">
                     <div className="col-lg-9">
                     <div className="row">

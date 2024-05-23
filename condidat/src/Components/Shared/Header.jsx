@@ -26,7 +26,7 @@ function Header() {
           <div className="header-left">
             <div className="header-logo">
               <a className="d-flex" >
-                <img alt="jobBox" src="assets/imgs/template/jobhub-logo.svg" />
+                <img  style={{height:"40px"}}alt="jobBox" src="assets/imgs/template/cat.png" />
               </a>
             </div>
           </div>

@@ -44,5 +44,6 @@ router.get('/dernier/condidat' , condidatController.getLatestCondidats);
 router.get('/percentage/condidats',  checkToken,condidatController.getPercentageCondidatsApplied);
 router.get('/percentage/accepted', checkToken, condidatController.getPercentageCondidatsAccepted);
 router.get('/percentage/nonaccepted', checkToken, condidatController.getPercentageCondidatsnonAccepted);
+router.put('/condidat/:id', checkToken, condidatController.editCondidatDate);
   app.use("/condidates", router);
 };

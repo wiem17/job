@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
     setisLogedIn(false);
     localStorage.removeItem("userID");
     localStorage.removeItem("isLogedIn");
-    navigate("/");
+    localStorage.removeItem("token");
+    window.location.reload();
   };
   useEffect(() => {
     const storedLogedStatus = localStorage.getItem("isLogedIn");
@@ -71,11 +72,12 @@ import { useNavigate } from "react-router-dom";
               </li>
               <li>
                 {" "}
-                <a className="dashboard2" href="login.html">
+                <a className="dashboard2" >
                   <img
                     src="assets/imgs/page/dashboard/logout.svg"
                     alt="jobBox"
                   />
+                  
                   <span className="name">
                   {isLogedIn ? (
               <Link
@@ -86,13 +88,7 @@ import { useNavigate } from "react-router-dom";
               </Link>
             ) : (
               <>
-                <Link to="/register"> S'inscrire </Link>
-                <Link
-                  to="/login"
-                  className="btn btn-default btn-shadow ml-40 hover-up"
-                >
-                  Se connecter
-                </Link>
+                
               </>
             )}
             </span>

@@ -38,6 +38,23 @@ export const refuseCondidat = async (id) => {
     throw error.response.data;
   }
 };
+export const getCondidatbyid = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}api/condidates/${id}`,config  );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+export const updatecondidat = async (id, Data) => {
+  try {
+    const response = await axios.put(`${baseUrl}api/condidates/condidat/${id}`, Data ,config);
+    return response;
+  } catch (error) {
+    console.error('Error updating condidat:', error);
+    throw error;
+  }
+};
 export const getAcceptedCondidats = async () => {
   try {
     const response = await axios.get(
@@ -115,9 +132,9 @@ export const getNonAcceptedCondidatsByPosteTitle = async (titre) => {
     throw error;
   }
 };
-export const getLatestcondidat = async () => {
+export const getcondidatbynotification = async () => {
   try {
-    const response = await axios.get(`${baseUrl}api/condidates/dernier/condidat`);
+    const response = await axios.get(`${baseUrl}api/condidates/`);
     return response.data;
   } catch (error) {
     console.error('Error fetching condidats:', error);

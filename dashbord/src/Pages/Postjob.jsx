@@ -262,7 +262,7 @@ const PosteList = () => {
       onClick={showWidget}
       className="btn btn-default upload-button"
     >
-      Upload Images
+      Télécharger Image
     </Button>
     <div className="d-flex justify-content-center mb-3">
       <div className="images-preview">

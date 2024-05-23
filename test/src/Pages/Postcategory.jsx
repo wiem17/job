@@ -8,7 +8,7 @@ import "./Style.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Col, Container, Row } from "react-bootstrap";
+import {  Container, Row } from "react-bootstrap";
 import { countTotalPostes } from "../Services/PosteService";
 import Totaljob from "./Totaljob";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +43,17 @@ function Post({ onClick }) {
 }, [categories]);
 
 useEffect(() => {
+  if (localStorage.getItem("titreFromPost")) {
+    const poste = postes.find((poste) => {
+      return poste.titre === localStorage.getItem("titreFromPost");
+    });
+    console.log("titre de poste :", postes.length > 0);
+    handleClick(localStorage.getItem("titreFromPost"));
+
+    localStorage.removeItem("titreFromPost");
+  }
+}, [postes]);
+useEffect(() => {
     const storedLogedStatus = localStorage.getItem("isLogedIn");
     console.log(storedLogedStatus);
     setisLogedIn(storedLogedStatus);
@@ -50,6 +61,7 @@ useEffect(() => {
   const posteSearch = postes.filter((poste) =>
     poste.titre.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  
   return (
     <div>
       <section className="section-box-2">
@@ -203,7 +215,7 @@ useEffect(() => {
                 ) : (
                   <Container>
                     <Row>
-                      {posteSearch &&
+                    {posteSearch &&
                         posteSearch.map((poste) => (
                           <div className="col-xl-12 col-12" key={poste._id}>
                             <div className="card-grid-2 hover-up">
@@ -229,65 +241,33 @@ useEffect(() => {
                                       <a className="name-job" href="#">
                                         {poste.titre}
                                       </a>
-                                      <span className="location-small">
-                                        {poste.location}
-                                      </span>
                                     </div>
-                                  </div>
-                                </div>
-                                <div className="col-lg-6 text-start text-md-end pr-60 col-md-6 col-sm-12">
-                                  <div className="pl-15 mb-15 mt-30">
-                                    {poste.tags &&
-                                      poste.tags.map((tag, index) => (
-                                        <a
-                                          className="btn btn-grey-small mr-5"
-                                          href="#"
-                                          key={index}
-                                        >
-                                          {tag}
-                                        </a>
-                                      ))}
                                   </div>
                                 </div>
                               </div>
                               <div className="card-block-info">
                                 <h4>
                                   <a href={`job-details/${poste._id}`}>
-                                    {poste.titre}
+                                    {poste.categories}
                                   </a>
                                 </h4>
-                                <div className="mt-5">
-                                  <span className="card-briefcase">
-                                    {poste.type}
-                                  </span>
-                                  <span className="card-time">
-                                    <span> mins ago</span>
-                                  </span>
-                                </div>
+
                                 <p className="font-sm color-text-paragraph mt-10">
-                                  {poste.description}
+                                  Description: {poste.description}
                                 </p>
                                 <p className="font-sm color-text-paragraph mt-10">
-                                  {poste.competences}
+                                  Compétences: {poste.competences}
                                 </p>
-                                <p className="font-sm color-text-paragraph mt-10">
-                                  {poste.categories}
-                                </p>
+
                                 <div className="card-2-bottom mt-20">
                                   <div className="row">
-                                    <div className="col-lg-7 col-7">
-                                      <span className="card-text-price">
-                                        {poste.price}
-                                      </span>
-                                    </div>
+                                    <div className="col-lg-7 col-7"></div>
                                     <div className="col-lg-5 col-5 text-end">
                                       {isLogedIn ? (
                                         <div
                                           className="btn btn-apply-now"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#ModalApplyJobForm"
-                                          onClick={() =>
-                                            handleClick(poste.titre)
+
+                                          onClick={() => handleClick(poste.titre)
                                           }
                                         >
                                           Postulez maintenant
@@ -295,9 +275,16 @@ useEffect(() => {
                                       ) : (
                                         <div
                                           className="btn btn-apply-now"
-                                          onClick={() => navigate("/login")}
+                                          onClick={() => {
+                                            localStorage.setItem(
+                                              "titreFromPost",
+                                              poste.titre
+                                            );
+
+                                            navigate("/loginuser");
+                                          }}
                                         >
-                                         Postulez maintenant
+                                          Postulez maintenant
                                         </div>
                                       )}
                                     </div>

@@ -7,7 +7,7 @@ import {
   updateUserImage,
   updateUserById,
   fetchCondidatsByUserId,
-  deleteUserAndCondidatById
+  deleteUserAndCondidatById,
 } from "../Services/userApi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,11 +26,12 @@ function Main() {
   const [image, setImage] = useState("");
   const [newImage, setNewImage] = useState(null);
   const fileInputRef = useRef(null);
-   const [loading, setLoading] = useState(true);
-  console.log(user._id);
+  const [loading, setLoading] = useState(true);
+  console.log(user?._id);
+
   useEffect(() => {
     try {
-      getUserById(user._id).then((res) => {
+      getUserById(user?._id).then((res) => {
         setUserData(res);
       });
     } catch (error) {
@@ -40,7 +41,7 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    fetchCondidatsByUserId(user._id)
+    fetchCondidatsByUserId(user?._id)
       .then((res) => {
         if (res && res.condidats.length > 0) {
           setCondidats(res.condidats);
@@ -80,11 +81,11 @@ function Main() {
 
   const handleSaveChanges = async (e) => {
     e.preventDefault();
-    console.log("----",userData);
-    
+    console.log("----", userData);
+
     try {
       // Envoyez les données de l'utilisateur mises à jour à votre backend
-      const updatedUser = await updateUserById(user._id, userData);
+      const updatedUser = await updateUserById(user?._id, userData);
       console.log("User updated successfully:", updatedUser);
 
       // Remettez à zéro l'état de l'image après l'enregistrement réussi
@@ -119,17 +120,22 @@ function Main() {
 
   const handleDeleteuser = async (id) => {
     try {
-        // Appel de la fonction deleteProduct de votre service pour supprimer le produit
-        await deleteUserAndCondidatById(id);
-        // Mise à jour de l'état local des produits après la suppression
-       
-       toast.success("compte supprimé avec succées")
-       navigate("/")
+      // Appel de la fonction deleteProduct de votre service pour supprimer le produit
+      await deleteUserAndCondidatById(id);
+      // Mise à jour de l'état local des produits après la suppression
+
+      toast.success("compte supprimé avec succées");
+      localStorage.removeItem("isLogedIn");
+
+      localStorage.removeItem("userID");
+      localStorage.removeItem("isLogedIn");
+      localStorage.removeItem("token");
+      window.location.reload();
     } catch (error) {
-        toast.error("compte  n'est pas supprimé");
-        console.error("Error deleting compte:", error);
+      toast.error("compte  n'est pas supprimé");
+      console.error("Error deleting compte:", error);
     }
-};
+  };
 
   return (
     <>
@@ -184,7 +190,10 @@ function Main() {
                     </ul>
                     <div className="border-bottom pt-10 pb-10" />
                     <div className="mt-20 mb-20">
-                      <a className="link-red" onClick={()=>handleDeleteuser(user._id)}>
+                      <a
+                        className="link-red"
+                        onClick={() => handleDeleteuser(user?._id)}
+                      >
                         Supprimer Mon Compte
                       </a>
                     </div>
@@ -206,9 +215,9 @@ function Main() {
                         </a>
                         <div className="box-profile-image">
                           <div className="image-profile">
-                            {userData && userData.image ? (
+                            {userData && userData?.image ? (
                               <img
-                                src={baseUrl + userData.image}
+                                src={baseUrl + userData?.image}
                                 alt="User Image"
                                 onChange={handleChange}
                                 style={{ maxWidth: "150%", maxHeight: "200px" }}
@@ -413,56 +422,87 @@ function Main() {
                         role="tabpanel"
                         aria-labelledby="tab-my-jobs"
                       >
-                        <h3 className="mt-0 color-brand-1 mb-50">My Jobs</h3>
+                        <h3 className="mt-0 color-brand-1 mb-50">Mes Postes</h3>
                         <div className="row display-list">
                           <div className="col-xl-12 col-12">
                             {loading ? (
-        <p>Chargement en cours...</p> // Afficher un message de chargement pendant que les données sont récupérées
-      ) :
-                            condidats.length > 0 ? (
-        condidats.map((condidat) => (
-          <div className="card-grid-2 hover-up" key={condidat._id}>
-            <div className="row">
-              <div className="col-lg-6 col-md-6 col-sm-12">
-                <div className="card-grid-2-image-left">
-                  <div className="image-box">
-                    <a href={`${baseUrl}${condidat.file}`}>
-                      <img src="assets/imgs/brands/brand-6.png" alt="jobBox" />
-                    </a>
-                  </div>
-                  <div className="right-info">
-                    <a className="name-job" href="">{condidat.email}</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card-block-info">
-              <h4>{condidat.titrePoste}</h4>
-              <span style={{ color: "purple", fontWeight: "bold" }}>Lettre de motivation: </span>
-              <span style={{ color: "purple", fontWeight: "bold" }}>{condidat.lettre_de_motivation}</span>
-              <div className="card-2-bottom mt-20">
-                <div className="row">
-                  <div className="col-lg-5 col-5 text-end">
-                  {condidat.accepted === "true" ? (
-  <p style={{ color: "green" }}>Accepté nous vous enverrons un mail</p>
-) : condidat.accepted === "en attente" ? (
-  <p style={{ color: "gray" }}>En attente</p>
-) : condidat.accepted === "false" ? (
-  <p style={{ color: "red" }}>Refusé</p>
-) : (
-  <p style={{ color: "red" }}>Erreur: État inconnu</p>
-)}
-
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p>Aucun poste trouvé</p>
-      )}
+                              <p>Chargement en cours...</p> // Afficher un message de chargement pendant que les données sont récupérées
+                            ) : condidats.length > 0 ? (
+                              condidats.map((condidat) => (
+                                <div
+                                  className="card-grid-2 hover-up"
+                                  key={condidat?._id}
+                                >
+                                  <div className="row">
+                                    <div className="col-lg-6 col-md-6 col-sm-12">
+                                      <div className="card-grid-2-image-left">
+                                        <div className="image-box">
+                                          <a
+                                            href={`${baseUrl}${condidat?.file}`}
+                                          >
+                                            <img
+                                              src="assets/imgs/brands/brand-6.png"
+                                              alt="jobBox"
+                                            />
+                                          </a>
+                                        </div>
+                                        <div className="right-info">
+                                          <a className="name-job" href="">
+                                            {condidat?.email}
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="card-block-info">
+                                    <h4>{condidat?.titrePoste}</h4>
+                                    <span
+                                      style={{
+                                        color: "purple",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      Lettre de motivation:{" "}
+                                    </span>
+                                    <span
+                                      style={{
+                                        color: "purple",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {condidat?.lettre_de_motivation}
+                                    </span>
+                                    <div className="card-2-bottom mt-20">
+                                      <div className="row">
+                                        <div className="col-lg-5 col-5 text-end">
+                                          {condidat?.accepted === "true" ? (
+                                            <p style={{ color: "green" }}>
+                                              Accepté nous vous enverrons un
+                                              mail
+                                            </p>
+                                          ) : condidat.accepted ===
+                                            "en attente" ? (
+                                            <p style={{ color: "gray" }}>
+                                              En attente
+                                            </p>
+                                          ) : condidat.accepted === "false" ? (
+                                            <p style={{ color: "red" }}>
+                                              Refusé
+                                            </p>
+                                          ) : (
+                                            <p style={{ color: "red" }}>
+                                              Erreur: État inconnu
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <p>Aucun poste trouvé</p>
+                            )}
                           </div>
                         </div>
                       </div>

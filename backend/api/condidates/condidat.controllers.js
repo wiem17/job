@@ -1,87 +1,82 @@
 const CondidatSchema = require("../condidates/condidat.models");
 const PosteSchema = require("../postes/poste.models");
 const UserSchema = require("../users/user.models");
+const NotificationSchema = require("../notifications/notification.models"); 
 const moment = require("moment");
 require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
 // Créer un nouveau condidat
 exports.createCondidat = async (req, res, next) => {
   const { userID, titrePoste, email, lettre_de_motivation } = req.body;
-  const { file } = req; // Extract file from request
-  const notificationId = uuidv4();
-  const message = "Un nouveau candidat a été ajouté."; // Définir le message correctement
-  const read = true;
+  const { file } = req;
+
   try {
-    // Vérifier si l'utilisateur a déjà postulé au poste spécifique
+    // Vérifiez si le candidat a déjà postulé pour le poste spécifique
     const existingCondidat = await CondidatSchema.findOne({
       userID,
       titrePoste,
     });
 
     if (existingCondidat) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Vous avez déjà postulé à ce poste" });
+      return res.status(400).json({ success: false, error: "Vous avez déjà postulé à ce poste" });
     }
 
-    // Si l'utilisateur n'a pas déjà postulé au poste spécifique, ajouter la candidature
+    // Créez une nouvelle instance de candidat
     const newCondidat = new CondidatSchema({
       userID,
       titrePoste,
       email,
       lettre_de_motivation,
-      file: (file && file.filename) || null, // Include file in new CondidatSchema instance
+      file: file ? file.filename : null,
     });
 
-    const saved = await newCondidat.save();
+    // Sauvegardez le nouveau candidat
+    const savedCondidat = await newCondidat.save();
 
-    if (newCondidat) {
-      // Trouver l'utilisateur admin pour ajouter une notification
-      const adminUser = await UserSchema.findOne({ role: "ADMIN" });
-      console.log(adminUser.notifications)
-      let notification = [...adminUser.notifications];
-      
-      notification.push({
-        notificationId: notificationId,
-        message: message,
-        read: read,
-      });
-      // Vérifier si l'utilisateur admin existe
-      const user = await UserSchema.findOneAndUpdate(
-        { role: "ADMIN" }, // Rechercher l'utilisateur par son rôle
-        {
-          $set: {
-            notifications: notification, // Mettre à jour le champ read dans le tableau notifications à l'index 0
-          },
-        },
-        { new: true }
-      );
-      if (!user) {
-        return res
-          .status(404)
-          .json({ error: `Aucun utilisateur avec le rôle ${role} trouvé` });
-      }
-      res.json(user);
-    }
+    // Créez une nouvelle instance de notification
+    const newNotification = new NotificationSchema({
+      message: "Un nouveau candidat a été ajouté",
+      type: "info",
+      read: false,
+      feedback: "",
+    });
 
-    return res.status(201).json({ success: true, information: saved });
+    // Sauvegardez la nouvelle notification
+    const savedNotification = await newNotification.save();
+
+    // Associez la notification au candidat
+    savedCondidat.notifications.push(savedNotification._id);
+    await savedCondidat.save();
+
+    return res.status(201).json({ success: true, information: savedCondidat });
   } catch (error) {
     console.error("Erreur lors de l'ajout du candidat:", error);
-    return res
-      .status(500)
-      .json({ success: false, error: "Erreur lors de l'ajout du candidat" });
+    return res.status(500).json({ success: false, error: "Erreur lors de l'ajout du candidat" });
   }
 };
+
+
+
 // Obtenir tous les condidats
 exports.getAllCondidats = async (req, res, next) => {
   try {
-    const condidats = await CondidatSchema.find().populate(
-      "userID",
-      "name lastname email"
+    // Récupérer tous les condidats avec leurs notifications
+    const condidats = await CondidatSchema.find().populate({
+      path: 'userID',
+      select: 'name lastname email'
+    }).populate('notifications');
+
+    // Afficher les condidats avec leurs notifications pour vérification
+    console.log('Condidats avec toutes les notifications :', condidats);
+
+    // Filtrer les condidats qui ont des notifications non lues
+    const condidatsAvecNotificationsNonLues = condidats.filter(condidat =>
+      condidat.notifications.some(notification => !notification.read)
     );
+
     return res.send({
       success: true,
-      condidats: condidats,
+      condidats: condidatsAvecNotificationsNonLues,
     });
   } catch (e) {
     next(e);
@@ -107,6 +102,33 @@ exports.getCondidatById = async (req, res, next) => {
     next(e);
   }
 };
+exports.editCondidatDate = async (req, res, next) => {
+  const condidatId = req.params.id;
+  const { dateMessage } = req.body; // Nouvelle date à mettre à jour
+
+  try {
+    // Vérifier si le condidat existe
+    const condidat = await CondidatSchema.findById(condidatId);
+    if (!condidat) {
+      return res.status(404).send({
+        success: false,
+        message: "Condidat not found",
+      });
+    }
+
+    // Mettre à jour la date du condidat
+    condidat.dateMessage = dateMessage;
+    await condidat.save();
+
+    return res.send({
+      success: true,
+      message: "Condidat date updated successfully",
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 
 // Supprimer un condidat par son ID
 exports.deleteCondidatById = async (req, res, next) => {
@@ -322,7 +344,7 @@ exports.getPercentagePostesAdded = async (req, res) => {
     const totalPostes = await PosteSchema.countDocuments();
 
     // Calculer le pourcentage de postes ajoutés
-    const percentagePostesAdded = (totalPostes / totalPostes) * 100;
+    const percentagePostesAdded =( (totalPostes / totalPostes) * 100) .toFixed(1);
 
     res.status(200).json({ percentagePostesAdded });
   } catch (err) {
@@ -336,7 +358,7 @@ exports.getPercentageCondidatsApplied = async (req, res) => {
 
     // Calculer le pourcentage du nombre total de candidats par rapport au nombre maximum de candidats
     const percentageCondidatsApplied =
-      (totalCondidats / maximumCondidats) * 100;
+      ((totalCondidats / maximumCondidats) * 100 ).toFixed(1);
 
     res.status(200).json({ percentageCondidatsApplied });
   } catch (err) {
@@ -352,7 +374,7 @@ exports.getPercentageCondidatsAccepted = async (req, res) => {
 
     // Calcul du pourcentage de candidats acceptés
     const percentageCondidatsAccepted =
-      (totalCondidatsAccepted / totalCondidats) * 100;
+      ((totalCondidatsAccepted / totalCondidats) * 100 ).toFixed(1);
 
     res.status(200).json({ percentageCondidatsAccepted });
   } catch (err) {
@@ -368,7 +390,7 @@ exports.getPercentageCondidatsnonAccepted = async (req, res) => {
 
     // Calcul du pourcentage de candidats acceptés
     const percentageCondidatsnonAccepted =
-      (totalCondidatsnonAccepted / totalCondidats) * 100;
+     ( (totalCondidatsnonAccepted / totalCondidats) * 100) .toFixed(1);
 
     res.status(200).json({ percentageCondidatsnonAccepted });
   } catch (err) {

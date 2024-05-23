@@ -33,13 +33,13 @@ export default function Profile() {
   const [image, setImage] = useState("");
   const [userId, setUserId] = useState("");
   const fileInputRef = useRef(null);
-  const userid = useUser();
+  const util = useUser();
  
   const baseUrl = process.env.REACT_APP_API;
  
   useEffect(() => {
     try {
-      getUserById(userid._id).then((res) => {
+      getUserById(util._id).then((res) => {
         setUser(res);
       });
     } catch (error) {
@@ -47,14 +47,15 @@ export default function Profile() {
       console.log(error);
     }
   }, []);
+
  
 
   const handleSaveChanges = async (e) => {
     e.preventDefault();
-    console.log(userid);
+    console.log(util);
     try {
       // Envoyez les données de l'utilisateur mises à jour à votre backend
-      const updatedUser = await updateUserById(userid._id, user);
+      const updatedUser = await updateUserById(util._id, user);
       console.log("User updated successfully:", updatedUser);
 
       // Remettez à zéro l'état de l'image après l'enregistrement réussi
@@ -62,7 +63,7 @@ export default function Profile() {
       toast.success("Données modifié avec succès !");
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.erreur("Données  n'est modifié avec succès !");
+     toast.erreur("Données  n'est modifié avec succès !");
     }
   };
   const handleChange = (e) => {

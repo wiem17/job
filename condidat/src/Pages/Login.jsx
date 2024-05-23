@@ -22,7 +22,6 @@ function Login() {
             localStorage.setItem("isLogedIn", true);
             setTimeout(() => {
               window.location.reload(false);
-              //navigate("/");
             }, 1000);
           } else {
             alert("compte condidat requis");

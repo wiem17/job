@@ -28,6 +28,15 @@ const condidatSchema = new mongoose.Schema({
     type: Date, // Définissez le type comme Date pour stocker la date et l'heure
     default: Date.now, // Définissez une valeur par défaut pour enregistrer la date actuelle lors de la création
   },
+  notifications: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Notification"
+  }],
+  dateMessage: {
+    type: String,
+    default: ""
+}
+
 });
 const CondidatSchema = mongoose.model("condidats", condidatSchema);
 

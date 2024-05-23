@@ -43,10 +43,8 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     notifications: [{
-      notificationId: String,
-      message: String,
-      type: String,
-      read: Boolean
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Notification"
     }]
 
 

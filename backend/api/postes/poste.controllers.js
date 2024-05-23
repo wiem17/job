@@ -135,10 +135,11 @@ exports.deleteImage = async (req, res) => {
 exports.getPercentagePostesAdded = async (req, res) => {
   try {
     const totalPostes = await PosteSchema.countDocuments();
-    const maximumPostes = 1000; // Nombre maximum de postes
+    const maximumPostes = 500; // Nombre maximum de postes
 
     // Calculer le pourcentage du nombre total de postes par rapport au nombre maximum de postes
-    const percentagePostesAdded = (totalPostes / maximumPostes) * 100;
+    const percentagePostesAdded = ((totalPostes / maximumPostes) * 100).toFixed(1);
+
 
     res.status(200).json({ percentagePostesAdded });
   } catch (err) {

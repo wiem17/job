@@ -41,7 +41,7 @@ function Post({ onClick }) {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("titreFromPost")) {
+    if (localStorage.getItem("titreFromPost") && localStorage.getItem("token")) {
       const poste = postes.find((poste) => {
         return poste.titre === localStorage.getItem("titreFromPost");
       });
@@ -169,7 +169,7 @@ function Post({ onClick }) {
                                         >
                                           Postulez maintenant
                                         </div>
-                                      ) : (
+                                       ) : (
                                         <div
                                           className="btn btn-apply-now"
                                           onClick={() => {
